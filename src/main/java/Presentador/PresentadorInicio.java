@@ -8,6 +8,8 @@ import Vista.Sesion;
 import Vista.vistaMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import static java.lang.System.exit;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -21,6 +23,9 @@ public class PresentadorInicio implements ActionListener{
         this.iniciar = inicio;
         this.iniciar.btnIngresar.addActionListener(this);
         this.iniciar.btnSalir.addActionListener(this);    
+        
+        iniciar.jlLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/percha (3).png")));
+        iniciar.btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cerrar-sesion.png")));
         iniciar.setVisible(true);
     }
 
@@ -33,7 +38,7 @@ public class PresentadorInicio implements ActionListener{
             iniciar.dispose();            
         }
         if(e.getSource()==iniciar.btnSalir){
-            System.exit(0);
+            exit(0);
         }
     }
     

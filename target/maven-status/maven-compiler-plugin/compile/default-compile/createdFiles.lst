@@ -1,7 +1,7 @@
-Servidor\package-info.class
 Servidor\SolicitarAutorizacionResponse.class
 Servidor\SolicitarAutorizacion.class
 Servidor\ILoginService.class
 Servidor\LoginService.class
 Servidor\ObjectFactory.class
 Servidor\Autorizacion.class
+Servidor\package-info.class

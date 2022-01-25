@@ -14,6 +14,9 @@ import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 import java.util.GregorianCalendar;
 
 public class PresentadorMenu implements ActionListener{
@@ -40,6 +43,13 @@ public class PresentadorMenu implements ActionListener{
         this.principal.btnNvoCliente.addActionListener(this);
         this.principal.btnSalir.addActionListener(this);
         
+        principal.jlProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/moda.png")));
+        principal.jlVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/ventas (1).png"))); // NOI18N
+        principal.jlClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cliente.png"))); // NOI18N
+        principal.btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cerrar-sesion.png"))); // NOI18N
+        principal.jlLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/percha (3).png"))); // NOI18N
+        principal.jlLogo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/percha (3).png"))); // NOI18N
+        
         principal.jlLogo.setVisible(false);
         principal.jlLogo1.setVisible(true);
         
@@ -65,8 +75,8 @@ public class PresentadorMenu implements ActionListener{
         modProductos.setBounds(250, 100, 700, 700);
         
         Calendar fecha = new GregorianCalendar();
-        int mes = fecha.get(Calendar.MONTH);
-        principal.jlFecha.setText(fecha.get(Calendar.DAY_OF_MONTH)+"/"+(mes+1)+"/"+fecha.get(Calendar.YEAR));
+        int mes = fecha.get(MONTH);
+        principal.jlFecha.setText(fecha.get(DAY_OF_MONTH)+"/"+(mes+1)+"/"+fecha.get(YEAR));
         principal.jlEmpleado.setText(iniciar.jtfLegajo.getText());
     }
 

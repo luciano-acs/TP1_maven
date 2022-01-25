@@ -4,13 +4,9 @@
  */
 package Presentador;
 
-import Modelo.BD.BD;
 import Vista.Sesion;
-import Vista.pProductos;
-import Vista.pVentas;
 import Vista.vistaMenu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import static java.lang.System.out;
 /**
  *
  * @author Luciano Acosta
@@ -18,8 +14,10 @@ import java.awt.event.ActionListener;
 public class Principal{
     
     public static void main(String[] args) {        
+        out.println("HOLA");
         Sesion inicio = new Sesion();
         PresentadorInicio iniciar = new PresentadorInicio(inicio);
+       
 //        BD bd = new BD();
 //        
 //        System.out.println(bd.ultimoCod());

@@ -14,8 +14,24 @@ import Vista.pProductos;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import static java.awt.event.ItemEvent.SELECTED;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.String.valueOf;
+import static java.lang.String.valueOf;
+import static java.lang.String.valueOf;
+import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -77,20 +93,20 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
             modProducto();            
         }
         if(e.getSource().equals(productos.btnConfirmar)){
-            int cantidad = Integer.parseInt(productos.jtfCantidad.getText());
+            int cantidad = parseInt(productos.jtfCantidad.getText());
             
             String ttalle = (String) productos.cbTipo.getSelectedItem();
             String talle = (String) productos.cbTalle.getSelectedItem();
             String colorr = (String) productos.cbColor.getSelectedItem();
-            int cantidadS = Integer.parseInt(productos.jtfCantidadS.getText());            
+            int cantidadS = parseInt(productos.jtfCantidadS.getText());            
             
             suma = suma + cantidadS;
             if(suma > cantidad){
-                System.out.println(suma);
+                out.println(suma);
                 if((suma-cantidadS)==0){suma=0;}
                 else{suma=suma-cantidadS;}
-                JOptionPane.showMessageDialog(null, "La cantidad superó el total indicado");
-                System.out.println(suma);
+                showMessageDialog(null, "La cantidad superó el total indicado");
+                out.println(suma);
             }else{
                 DefaultTableModel datos = (DefaultTableModel) productos.jtStock.getModel();        
                 Object[] fila = {ttalle,talle,colorr,cantidadS};                
@@ -103,7 +119,7 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
             int disminuir = (int) productos.jtStock.getValueAt(fila, 3);
             suma = suma - disminuir;
             datos.removeRow(productos.jtStock.getSelectedRow());
-            System.out.println(suma);
+            out.println(suma);
         }
     }
 
@@ -116,15 +132,15 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
     }
 
     private void agregarProductoSolo() {
-        int codigo = Integer.parseInt(productos.jtfNombre.getText());
+        int codigo = parseInt(productos.jtfNombre.getText());
         String descripcion = productos.jtfDescripcion.getText();
-        double iva = Double.parseDouble(productos.jtfIVA.getText());
-        double costo = Double.parseDouble(productos.jtfCosto.getText());
-        double margen = Double.parseDouble(productos.jtfMargen.getText());
+        double iva = parseDouble(productos.jtfIVA.getText());
+        double costo = parseDouble(productos.jtfCosto.getText());
+        double margen = parseDouble(productos.jtfMargen.getText());
         
         String marca = (String) productos.cbMarca.getSelectedItem();       
         String rubro = (String) productos.cbRubro.getSelectedItem();
-        int stock = Integer.parseInt(productos.jtfCantidad.getText());
+        int stock = parseInt(productos.jtfCantidad.getText());
 //        String talle = (String) productos.cbTalle.getSelectedItem();
 //        String colorr = (String) productos.cbColor.getSelectedItem();
         
@@ -137,19 +153,19 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         Producto productoEnvio = new Producto(codigo,descripcion,iva,costo,margen,m,r,s,1);
         bd.agregarProducto(productoEnvio,s,m,r);
         listarTabla();       
-        JOptionPane.showMessageDialog(null, "Producto agregado con exito");
+        showMessageDialog(null, "Producto agregado con exito");
     }
 
     private void agregarProducto() {
-        int codigo = Integer.parseInt(productos.jtfNombre.getText());
+        int codigo = parseInt(productos.jtfNombre.getText());
         String descripcion = productos.jtfDescripcion.getText();
-        double iva = Double.parseDouble(productos.jtfIVA.getText());
-        double costo = Double.parseDouble(productos.jtfCosto.getText());
-        double margen = Double.parseDouble(productos.jtfMargen.getText());
+        double iva = parseDouble(productos.jtfIVA.getText());
+        double costo = parseDouble(productos.jtfCosto.getText());
+        double margen = parseDouble(productos.jtfMargen.getText());
         
         String marca = (String) productos.cbMarca.getSelectedItem();       
         String rubro = (String) productos.cbRubro.getSelectedItem();
-        int stock = Integer.parseInt(productos.jtfCantidad.getText());
+        int stock = parseInt(productos.jtfCantidad.getText());
         
         Marca m = new Marca(bd.buscarCodMarca(marca),marca);
         Rubro r = new Rubro(bd.buscarCodRubro(rubro),rubro);       
@@ -161,12 +177,12 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         for(int i=0;i<productos.jtStock.getRowCount();i++){            
             Talle t = new Talle(bd.buscarCodTalle(productos.jtStock.getValueAt(i,1).toString()),productos.jtStock.getValueAt(i,1).toString());
             ColorP c = new ColorP(bd.buscarCodColor(productos.jtStock.getValueAt(i,2).toString()),productos.jtStock.getValueAt(i,2).toString()); 
-            int cantidad = Integer.parseInt(productos.jtStock.getValueAt(i, 3).toString());
+            int cantidad = parseInt(productos.jtStock.getValueAt(i, 3).toString());
             bd.agregarStock(codigo, t, c, cantidad);
         }        
         
         listarTabla();       
-        JOptionPane.showMessageDialog(null, "Producto agregado con exito");
+        showMessageDialog(null, "Producto agregado con exito");
     }
     public void listarTabla() {
         DefaultTableModel datos = (DefaultTableModel) listaProd.jtProductos.getModel();
@@ -191,7 +207,7 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
     private void buscarProductoTabla() {
         
         String codigo = listaProd.jtfBuscar.getText();
-        System.out.println(codigo);
+        out.println(codigo);
         for(int i = 0;i<listaProd.jtProductos.getRowCount();i++){
             if(listaProd.jtProductos.getValueAt(i, 0).toString().equals(codigo)){
                 listaProd.jLabel3.setText("");
@@ -254,13 +270,13 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         
         for(int i =0;i<talle.size();i++){
             productos.cbTalle.addItem(talle.get(i).getDescripcion());
-            System.out.println(talle.get(i).getDescripcion());
+            out.println(talle.get(i).getDescripcion());
         }
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if(e.getStateChange()==ItemEvent.SELECTED){
+        if(e.getStateChange()==SELECTED){
             productos.cbTalle.removeAllItems();
             if(productos.cbTipo.getSelectedIndex()>-1){
                 BD bd = new BD();
@@ -271,7 +287,7 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
                 }
             }
         }
-        if(e.getStateChange()==ItemEvent.SELECTED){
+        if(e.getStateChange()==SELECTED){
             modProductos.cbTalle.removeAllItems();
             if(modProductos.cbTipo.getSelectedIndex()>-1){
                 BD bd = new BD();
@@ -315,23 +331,23 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
     }
 
     private void rellenarCampos() {
-        int cod = Integer.parseInt(modProductos.jtfNombre.getText());
+        int cod = parseInt(modProductos.jtfNombre.getText());
         
         Producto p = bd.listarProducto(cod);
         
         modProductos.jtfDescripcion.setText(p.getDescripcion());
-        modProductos.jtfCosto.setText(String.valueOf(p.getCosto()));
-        modProductos.jtfIVA.setText(String.valueOf(p.getPorcIVA()));
-        modProductos.jtfMargen.setText(String.valueOf(p.getMargenGanancia()));
+        modProductos.jtfCosto.setText(valueOf(p.getCosto()));
+        modProductos.jtfIVA.setText(valueOf(p.getPorcIVA()));
+        modProductos.jtfMargen.setText(valueOf(p.getMargenGanancia()));
         modProductos.jtfNombre.setEnabled(false);
     }
 
     private void modProducto() {
-        int codigo = Integer.parseInt(modProductos.jtfNombre.getText());
+        int codigo = parseInt(modProductos.jtfNombre.getText());
         String descripcion = modProductos.jtfDescripcion.getText();
-        double iva = Double.parseDouble(modProductos.jtfIVA.getText());
-        double costo = Double.parseDouble(modProductos.jtfCosto.getText());
-        double margen = Double.parseDouble(modProductos.jtfMargen.getText());
+        double iva = parseDouble(modProductos.jtfIVA.getText());
+        double costo = parseDouble(modProductos.jtfCosto.getText());
+        double margen = parseDouble(modProductos.jtfMargen.getText());
         
         String marca = (String) modProductos.cbMarca.getSelectedItem();       
         String rubro = (String) modProductos.cbRubro.getSelectedItem();
@@ -344,7 +360,7 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         listarTabla();
         borrarjtf();        
         modProductos.jtfNombre.setEnabled(true);        
-        JOptionPane.showMessageDialog(null, "Producto modificado con exito");
+        showMessageDialog(null, "Producto modificado con exito");
     }
 
     private void eliminarProducto() {

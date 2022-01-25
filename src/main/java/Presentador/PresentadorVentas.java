@@ -21,11 +21,30 @@ import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import static java.awt.event.ItemEvent.SELECTED;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.Calendar;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.SwingConstants;
+import static javax.swing.SwingConstants.CENTER;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -70,23 +89,23 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
                 if(bd.consultarStock(ventas.jtfNombre.getText()) > 0){
                     buscarProducto();
                 }else{
-                    JOptionPane.showMessageDialog(null, "Producto sin stock");
+                    showMessageDialog(null, "Producto sin stock");
                 }
             }else{
-                JOptionPane.showMessageDialog(null, "El producto no exite");
+                showMessageDialog(null, "El producto no exite");
                 ventas.jtfNombre.setText("");
             }
         }
         if(e.getSource().equals(ventas.btnConfirmar)){
             int codColor = bd.buscarCodColor((String) ventas.cbColor.getSelectedItem());
             int codTalle = bd.buscarCodTalle((String) ventas.cbTalle.getSelectedItem());
-            if(Integer.parseInt(ventas.jtfCantidad.getText()) <= bd.consultarStock(ventas.jtfNombre.getText())){
-                if(bd.cantColor(ventas.jtfNombre.getText(),codColor) >= Integer.parseInt(ventas.jtfCantidad.getText()) &&
-                   bd.cantTalle(ventas.jtfNombre.getText(),codTalle) >= Integer.parseInt(ventas.jtfCantidad.getText())){
+            if(parseInt(ventas.jtfCantidad.getText()) <= bd.consultarStock(ventas.jtfNombre.getText())){
+                if(bd.cantColor(ventas.jtfNombre.getText(),codColor) >= parseInt(ventas.jtfCantidad.getText()) &&
+                   bd.cantTalle(ventas.jtfNombre.getText(),codTalle) >= parseInt(ventas.jtfCantidad.getText())){
                     
                     String codigo = ventas.jtfNombre.getText();
                     String descripcion = ventas.jtfDescripcion.getText();
-                    int cant = Integer.parseInt(ventas.jtfCantidad.getText());
+                    int cant = parseInt(ventas.jtfCantidad.getText());
             
                     Producto p = bd.buscarProducto(codigo);    
                     Talle t = new Talle(bd.buscarCodTalle((String) ventas.cbTalle.getSelectedItem()),(String) ventas.cbTalle.getSelectedItem());
@@ -101,18 +120,18 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
             
                     total();
                     limpiar();
-                    bd.actualizarStock(Integer.parseInt(codigo),cant,Integer.parseInt(ventas.jtfID.getText()),t,co);                    
+                    bd.actualizarStock(parseInt(codigo),cant,parseInt(ventas.jtfID.getText()),t,co);                    
                 }else{
-                    JOptionPane.showMessageDialog(null, "Stock no disponible. Las "+ventas.jtfDescripcion.getText()+" en stock para dicho talle y color son: "+bd.cantColor(ventas.jtfNombre.getText(),codColor));
+                    showMessageDialog(null, "Stock no disponible. Las "+ventas.jtfDescripcion.getText()+" en stock para dicho talle y color son: "+bd.cantColor(ventas.jtfNombre.getText(),codColor));
                 }                
             }else{
-                JOptionPane.showMessageDialog(null, "Stock no disponible. Las "+ventas.jtfDescripcion.getText()+" en stock son: "+bd.consultarStock(ventas.jtfNombre.getText()));
+                showMessageDialog(null, "Stock no disponible. Las "+ventas.jtfDescripcion.getText()+" en stock son: "+bd.consultarStock(ventas.jtfNombre.getText()));
             }
         }
         if(e.getSource().equals(ventas.btnEliminar)){
             DefaultTableModel datos = (DefaultTableModel) ventas.jtLinea.getModel();
             int fila = ventas.jtLinea.getSelectedRow();
-            int linea = Integer.parseInt(ventas.jtfID.getText());
+            int linea = parseInt(ventas.jtfID.getText());
             
             String codigo = (String) ventas.jtLinea.getValueAt(fila, 0);
             int cant = (int) ventas.jtLinea.getValueAt(fila, 2);
@@ -136,7 +155,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
                 datos.removeRow(i);
             }
             
-            JOptionPane.showMessageDialog(null,"Venta registrada");
+            showMessageDialog(null,"Venta registrada");
             ventas.jtfMonto.setEnabled(true);
             ventas.cbPago.setEnabled(true);
             
@@ -147,7 +166,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         }
         if(e.getSource().equals(ventas.btnCancelarVenta)){
             DefaultTableModel datos = (DefaultTableModel) ventas.jtLinea.getModel();
-            int linea = Integer.parseInt(ventas.jtfID.getText());
+            int linea = parseInt(ventas.jtfID.getText());
             
             for(int i=0;i<datos.getRowCount();i++){
                 String codigo = (String) ventas.jtLinea.getValueAt(i, 0);
@@ -164,7 +183,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
             
             limpiar();
             total();
-            JOptionPane.showMessageDialog(null, "Venta cancelada");
+            showMessageDialog(null, "Venta cancelada");
         }
         if(e.getSource().equals(ventas.btnFinalizarVenta)){
             limpiar();
@@ -186,11 +205,11 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
 //    
     private void cargarVenta() {
         String fecha = menu.jlFecha.getText();
-        int comprobante = Integer.parseInt(ventas.jtfID.getText());
-        double total = Double.parseDouble(ventas.jlTotal.getText());
+        int comprobante = parseInt(ventas.jtfID.getText());
+        double total = parseDouble(ventas.jlTotal.getText());
         Cliente cl = bd.buscarCliente(ventas.jtfCUIT.getText());
         
-        ArrayList<LineaDeVenta> lista = new ArrayList<LineaDeVenta>();
+        ArrayList<LineaDeVenta> lista = new ArrayList<>();
         DefaultTableModel datos = (DefaultTableModel) ventas.jtLinea.getModel();  
         for(int i = 0;i<ventas.jtLinea.getRowCount();i++){
             LineaDeVenta li = new LineaDeVenta();
@@ -202,22 +221,22 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         }        
         
         Venta ve = new Venta(fecha,comprobante,total,cl,lista);
-        bd.registrarVenta(ve,Integer.parseInt(menu.jlPunto.getText()));
+        bd.registrarVenta(ve,parseInt(menu.jlPunto.getText()));
     }   
 
     public void cardarId(int sum) {
         int cod = 1+sum;
         
         Calendar fecha = new GregorianCalendar();
-        int dia = fecha.get(Calendar.DAY_OF_MONTH);
-        int mes = fecha.get(Calendar.MONTH);
-        int anio = fecha.get(Calendar.YEAR);
+        int dia = fecha.get(DAY_OF_MONTH);
+        int mes = fecha.get(MONTH);
+        int anio = fecha.get(YEAR);
         
         String cadena = dia+""+(mes+1)+""+anio+""+cod+"";
         
-        System.out.println(cadena);
+        out.println(cadena);
         String idVenta = cadena;
-        ventas.jtfID.setHorizontalAlignment(SwingConstants.CENTER);
+        ventas.jtfID.setHorizontalAlignment(CENTER);
         ventas.jtfID.setText(idVenta);
         ventas.jtfID.setEnabled(false);
     }
@@ -230,7 +249,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
     }
 
     private void buscarProducto() {
-        int cod = Integer.parseInt(ventas.jtfNombre.getText());
+        int cod = parseInt(ventas.jtfNombre.getText());
         Producto p = bd.listarProducto(cod);
 
         ventas.jtfDescripcion.setText(p.getDescripcion());
@@ -252,7 +271,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if(e.getStateChange()==ItemEvent.SELECTED){
+        if(e.getStateChange()==SELECTED){
             ventas.cbTalle.removeAllItems();
             if(ventas.cbTipo.getSelectedIndex()>-1){
                 int cod = bd.buscarCodTipo(ventas.cbTipo.getSelectedItem().toString());        
@@ -262,7 +281,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
                 }
             }
         }
-        if(e.getStateChange()==ItemEvent.SELECTED){
+        if(e.getStateChange()==SELECTED){
             if(ventas.cbPago.getSelectedIndex()>-1){
                 if(ventas.cbPago.getSelectedItem().equals("tarjeta")){
                     ventas.jtfTarjeta.setEnabled(true);

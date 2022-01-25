@@ -17,6 +17,7 @@ public class vistaMenu extends javax.swing.JFrame {
      */
     public vistaMenu() {
         initComponents();
+        System.out.println("init components");
     }
 
     /**
@@ -31,11 +32,11 @@ public class vistaMenu extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         btnNvoProducto = new javax.swing.JButton();
         btnVentas = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        jlProductos = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jLabel4 = new javax.swing.JLabel();
+        jlVentas = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        jLabel5 = new javax.swing.JLabel();
+        jlClientes = new javax.swing.JLabel();
         btnClientes = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
@@ -92,17 +93,17 @@ public class vistaMenu extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/moda.png"))); // NOI18N
-        jLabel2.setText(" Productos");
+        jlProductos.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        jlProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/moda.png"))); // NOI18N
+        jlProductos.setText(" Productos");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/ventas (1).png"))); // NOI18N
-        jLabel4.setText(" Ventas");
+        jlVentas.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        jlVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/ventas (1).png"))); // NOI18N
+        jlVentas.setText(" Ventas");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cliente.png"))); // NOI18N
-        jLabel5.setText(" Clientes");
+        jlClientes.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        jlClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cliente.png"))); // NOI18N
+        jlClientes.setText(" Clientes");
 
         btnClientes.setBackground(new java.awt.Color(0, 0, 0));
         btnClientes.setForeground(new java.awt.Color(255, 255, 255));
@@ -169,7 +170,7 @@ public class vistaMenu extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(67, 67, 67)
-                .addComponent(jLabel5)
+                .addComponent(jlClientes)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,11 +178,11 @@ public class vistaMenu extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(70, 70, 70)
-                                .addComponent(jLabel4))
+                                .addComponent(jlVentas))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(60, 60, 60)
-                                .addComponent(jLabel2)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(jlProductos)))
+                        .addGap(0, 49, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,13 +210,13 @@ public class vistaMenu extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
+                .addComponent(jlVentas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnVentas)
                 .addGap(104, 104, 104)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addComponent(jlProductos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnNvoProducto)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -225,12 +226,12 @@ public class vistaMenu extends javax.swing.JFrame {
                 .addGap(31, 31, 31)
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
+                .addComponent(jlClientes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnNvoCliente)
                 .addGap(11, 11, 11)
                 .addComponent(btnClientes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -298,7 +299,7 @@ public class vistaMenu extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jlPunto))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(31, 192, 132));
@@ -546,9 +547,6 @@ public class vistaMenu extends javax.swing.JFrame {
     public javax.swing.JButton btnSalir;
     public javax.swing.JButton btnVentas;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
@@ -559,10 +557,13 @@ public class vistaMenu extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
+    public javax.swing.JLabel jlClientes;
     public javax.swing.JLabel jlEmpleado;
     public javax.swing.JLabel jlFecha;
     public javax.swing.JLabel jlLogo;
     public javax.swing.JLabel jlLogo1;
+    public javax.swing.JLabel jlProductos;
     public javax.swing.JLabel jlPunto;
+    public javax.swing.JLabel jlVentas;
     // End of variables declaration//GEN-END:variables
 }
