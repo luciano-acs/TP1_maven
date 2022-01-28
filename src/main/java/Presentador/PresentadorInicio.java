@@ -4,12 +4,15 @@
  */
 package Presentador;
 
+import Modelo.BD.BD;
+import Modelo.Organizacion.Empleado;
 import Vista.Sesion;
 import Vista.vistaMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import static java.lang.System.exit;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,6 +21,7 @@ import javax.swing.ImageIcon;
 public class PresentadorInicio implements ActionListener{
 
     Sesion iniciar = new Sesion();
+    BD bd = new BD();
     
     public PresentadorInicio(Sesion inicio) {
         this.iniciar = inicio;
@@ -32,10 +36,15 @@ public class PresentadorInicio implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==iniciar.btnIngresar){
-            vistaMenu menu = new vistaMenu();
-            PresentadorMenu pMenu = new PresentadorMenu(menu,iniciar);
-            menu.setVisible(true);
-            iniciar.dispose();            
+            Empleado emp = bd.existeEmpleado(iniciar.jtfLegajo.getText(),iniciar.jtfContraseña.getText());
+            if(emp!=null){
+                vistaMenu menu = new vistaMenu();
+                PresentadorMenu pMenu = new PresentadorMenu(menu,iniciar,emp);
+                menu.setVisible(true);
+                iniciar.dispose();
+            }else{
+                JOptionPane.showMessageDialog(null, "Usuario y contraseña invalidos");
+            }                        
         }
         if(e.getSource()==iniciar.btnSalir){
             exit(0);

@@ -85,7 +85,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         ventas.jtfCVV.setEnabled(false);
         ventas.jtfTarjeta.setEnabled(false);
         ventas.jtfVto.setEnabled(false);
-    }  
+    } 
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -393,7 +393,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         return solicitar;
     }
 
-    private FEAuthRequest generarAuth() {
+    public FEAuthRequest generarAuth() {
         //wrapper
         LoginService servicio = new LoginService();
         ILoginService login = servicio.getSGEAuthService();

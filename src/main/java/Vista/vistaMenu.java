@@ -45,12 +45,10 @@ public class vistaMenu extends javax.swing.JFrame {
         btnNvoCliente = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jlFecha = new javax.swing.JLabel();
+        jlLegajo = new javax.swing.JLabel();
         jlEmpleado = new javax.swing.JLabel();
-        jlPunto = new javax.swing.JLabel();
+        jlFecha = new javax.swing.JLabel();
+        jlPto = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jlLogo = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -58,6 +56,7 @@ public class vistaMenu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        setPreferredSize(new java.awt.Dimension(950, 800));
         setResizable(false);
         setSize(new java.awt.Dimension(400, 400));
 
@@ -242,64 +241,49 @@ public class vistaMenu extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel2.setPreferredSize(new java.awt.Dimension(700, 110));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(31, 192, 132));
-        jLabel1.setText("EMPLEADO:");
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(31, 192, 132));
-        jLabel6.setText("FECHA:");
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(31, 192, 132));
-        jLabel7.setText("PUNTO DE VENTA:");
-
-        jlFecha.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jlFecha.setForeground(new java.awt.Color(31, 192, 132));
-        jlFecha.setText(" ");
+        jlLegajo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jlLegajo.setForeground(new java.awt.Color(255, 255, 255));
+        jlLegajo.setText("jLabel1");
 
         jlEmpleado.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jlEmpleado.setForeground(new java.awt.Color(31, 192, 132));
-        jlEmpleado.setText(" ");
+        jlEmpleado.setForeground(new java.awt.Color(255, 255, 255));
+        jlEmpleado.setText("jLabel2");
 
-        jlPunto.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jlPunto.setForeground(new java.awt.Color(31, 192, 132));
-        jlPunto.setText("25");
+        jlFecha.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jlFecha.setForeground(new java.awt.Color(255, 255, 255));
+        jlFecha.setText("jLabel3");
+
+        jlPto.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jlPto.setForeground(new java.awt.Color(255, 255, 255));
+        jlPto.setText("Punto de venta: 25");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(422, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(23, 23, 23)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jlFecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jlEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jlPunto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(108, 108, 108))
+                    .addComponent(jlEmpleado)
+                    .addComponent(jlLegajo))
+                .addGap(300, 300, 300)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jlFecha)
+                    .addComponent(jlPto))
+                .addGap(0, 0, 0))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
+                    .addComponent(jlLegajo)
                     .addComponent(jlFecha))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jlEmpleado))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jlPunto))
-                .addContainerGap(15, Short.MAX_VALUE))
+                    .addComponent(jlEmpleado)
+                    .addComponent(jlPto))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(31, 192, 132));
@@ -546,9 +530,6 @@ public class vistaMenu extends javax.swing.JFrame {
     public javax.swing.JButton btnNvoProducto;
     public javax.swing.JButton btnSalir;
     public javax.swing.JButton btnVentas;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     public javax.swing.JPanel jPanel3;
@@ -560,10 +541,11 @@ public class vistaMenu extends javax.swing.JFrame {
     public javax.swing.JLabel jlClientes;
     public javax.swing.JLabel jlEmpleado;
     public javax.swing.JLabel jlFecha;
+    public javax.swing.JLabel jlLegajo;
     public javax.swing.JLabel jlLogo;
     public javax.swing.JLabel jlLogo1;
     public javax.swing.JLabel jlProductos;
-    public javax.swing.JLabel jlPunto;
+    private javax.swing.JLabel jlPto;
     public javax.swing.JLabel jlVentas;
     // End of variables declaration//GEN-END:variables
 }

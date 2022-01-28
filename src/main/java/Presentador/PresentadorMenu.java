@@ -1,6 +1,7 @@
 package Presentador;
 
 import Modelo.BD.BD;
+import Modelo.Organizacion.Empleado;
 import Vista.Sesion;
 import Vista.pClientes;
 import Vista.pListarProductos;
@@ -29,10 +30,9 @@ public class PresentadorMenu implements ActionListener{
     pListarProductos listaProd = new pListarProductos();
     pLogo logo = new pLogo();
     pModProductos modProductos = new pModProductos();
-    
     BD bd = new BD();
     
-    public PresentadorMenu(vistaMenu vista, Sesion sesion) {
+    public PresentadorMenu(vistaMenu vista, Sesion sesion, Empleado emp) {
         this.principal = vista;
         this.iniciar = sesion;
         this.principal.btnNvoProducto.addActionListener(this);
@@ -76,8 +76,21 @@ public class PresentadorMenu implements ActionListener{
         
         Calendar fecha = new GregorianCalendar();
         int mes = fecha.get(MONTH);
-        principal.jlFecha.setText(fecha.get(DAY_OF_MONTH)+"/"+(mes+1)+"/"+fecha.get(YEAR));
-        principal.jlEmpleado.setText(iniciar.jtfLegajo.getText());
+        principal.jlFecha.setText("Fecha: "+""+fecha.get(DAY_OF_MONTH)+"/"+(mes+1)+"/"+fecha.get(YEAR));
+        principal.jlLegajo.setText(""+emp.getLegajo());
+        principal.jlEmpleado.setText(emp.getApellido()+", "+emp.getNombre());
+        
+        if(emp.getRol().equals("G")){
+            
+        }else if(emp.getRol().equals("V")){
+            principal.btnClientes.setEnabled(false);
+            principal.btnListarProd.setEnabled(false);
+            principal.btnModProducto.setEnabled(false);
+            principal.btnNvoCliente.setEnabled(false);
+            principal.btnNvoProducto.setEnabled(false);
+        }else{
+            
+        }
     }
 
     PresentadorMenu(){

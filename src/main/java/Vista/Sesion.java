@@ -30,9 +30,9 @@ public class Sesion extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jtfLegajo = new javax.swing.JTextField();
-        jtfContraseña = new javax.swing.JPasswordField();
         btnIngresar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        jtfContraseña = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(31, 192, 132));
@@ -44,7 +44,6 @@ public class Sesion extends javax.swing.JFrame {
         jLabel3.setText("Contraseña");
 
         jtfLegajo.setForeground(new java.awt.Color(153, 153, 153));
-        jtfLegajo.setText("Ingrese su legajo...");
         jtfLegajo.setBorder(null);
         jtfLegajo.setMargin(new java.awt.Insets(3, 2, 2, 2));
         jtfLegajo.setPreferredSize(new java.awt.Dimension(111, 26));
@@ -56,20 +55,6 @@ public class Sesion extends javax.swing.JFrame {
         jtfLegajo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtfLegajoActionPerformed(evt);
-            }
-        });
-
-        jtfContraseña.setForeground(new java.awt.Color(153, 153, 153));
-        jtfContraseña.setText("Ingrese su contraseña");
-        jtfContraseña.setBorder(null);
-        jtfContraseña.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtfContraseñaMouseClicked(evt);
-            }
-        });
-        jtfContraseña.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtfContraseñaActionPerformed(evt);
             }
         });
 
@@ -85,6 +70,9 @@ public class Sesion extends javax.swing.JFrame {
         btnSalir.setBorderPainted(false);
         btnSalir.setFocusPainted(false);
 
+        jtfContraseña.setBorder(null);
+        jtfContraseña.setPreferredSize(new java.awt.Dimension(111, 26));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -98,11 +86,11 @@ public class Sesion extends javax.swing.JFrame {
                                 .addComponent(jlLogo))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(73, 73, 73)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel2)
-                                    .addComponent(jtfContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jtfLegajo, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jtfLegajo, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                                    .addComponent(jtfContraseña, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(110, 110, 110)
                                 .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -120,12 +108,12 @@ public class Sesion extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addComponent(jLabel2)
                 .addGap(14, 14, 14)
-                .addComponent(jtfLegajo, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jtfLegajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jtfContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59)
+                .addGap(14, 14, 14)
+                .addComponent(jtfContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(56, 56, 56)
                 .addComponent(btnIngresar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
                 .addComponent(btnSalir)
@@ -143,14 +131,6 @@ public class Sesion extends javax.swing.JFrame {
     private void jtfLegajoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfLegajoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfLegajoActionPerformed
-
-    private void jtfContraseñaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtfContraseñaMouseClicked
-        jtfContraseña.setText("");
-    }//GEN-LAST:event_jtfContraseñaMouseClicked
-
-    private void jtfContraseñaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfContraseñaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtfContraseñaActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         // TODO add your handling code here:

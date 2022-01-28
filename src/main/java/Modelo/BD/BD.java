@@ -665,7 +665,7 @@ public class BD {
     }
 
     public boolean existe(String codigo) {
-        boolean existe = true;
+        boolean existe = false;
         try {
           Connection c = getConnection();
           Statement s = c.createStatement();
@@ -674,14 +674,43 @@ public class BD {
           ResultSet r = s.executeQuery(sql);
                   
           while(r.next()){
-              if(r.getInt("count(codProducto)")==0){
-                  existe = false;
+              if(r.getInt("count(codProducto)")==1){
+                  existe = true;
               }
           }          
         } catch(Exception e){
             e.printStackTrace();
         }
         return existe;
+    }
+    
+    public Empleado existeEmpleado(String user, String contraseña) {
+        Empleado emp = new Empleado();
+        try {
+            System.out.println("entre bd");
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select count(legajo), apellido, nombre, email, rol from empleado where legajo=%1 and contraseña='%2'"
+                        .replace("%1",""+user)
+                        .replace("%2",contraseña);
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              if(r.getInt("count(legajo)")==1){
+                  emp.setApellido(r.getString("apellido"));
+                  emp.setNombre(r.getString("nombre"));
+                  emp.setLegajo(Integer.parseInt(user));
+                  emp.setContraseña(contraseña);
+                  emp.setEmail(r.getString("email"));
+                  emp.setRol(r.getString("rol"));
+              }else{
+                  emp = null;
+              }                  
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return emp;
     }
     
     public int cantTalle(String codigo, int talle){
