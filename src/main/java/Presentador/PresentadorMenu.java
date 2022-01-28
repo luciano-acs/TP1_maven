@@ -112,8 +112,7 @@ public class PresentadorMenu implements ActionListener{
             listaProd.setVisible(false);
             modProductos.setVisible(false);
             
-            PresentadorVentas pv = new PresentadorVentas(ventas,principal);
-            pv.cardarId(0);
+            PresentadorVentas pv = new PresentadorVentas(ventas,principal);            
         }
         if(e.getSource()==principal.btnClientes){
             productos.setVisible(false);

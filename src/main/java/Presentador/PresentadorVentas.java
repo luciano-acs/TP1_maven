@@ -5,6 +5,17 @@
  */
 package Presentador;
 
+import AFIP.AlicIva;
+import AFIP.ArrayOfAlicIva;
+import AFIP.ArrayOfFECAEDetRequest;
+import AFIP.FEAuthRequest;
+import AFIP.FECAECabRequest;
+import AFIP.FECAEDetRequest;
+import AFIP.FECAERequest;
+import AFIP.FECAEResponse;
+import AFIP.FERecuperaLastCbteResponse;
+import AFIP.Service;
+import AFIP.ServiceSoap;
 import Modelo.BD.BD;
 import Modelo.Cliente.Cliente;
 import Modelo.Organizacion.Empleado;
@@ -17,22 +28,15 @@ import Modelo.Venta.LineaDeVenta;
 import Modelo.Venta.Venta;
 import Vista.pVentas;
 import Vista.vistaMenu;
+import Wrapper.Autorizacion;
+import Wrapper.ILoginService;
+import Wrapper.LoginService;
 import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import static java.awt.event.ItemEvent.SELECTED;
 import static java.lang.Double.parseDouble;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
 import static java.lang.Integer.parseInt;
 import static java.lang.System.out;
 import java.util.ArrayList;
@@ -43,7 +47,6 @@ import static java.util.Calendar.YEAR;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
-import javax.swing.SwingConstants;
 import static javax.swing.SwingConstants.CENTER;
 import javax.swing.table.DefaultTableModel;
 
@@ -57,6 +60,11 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
     pVentas ventas = new pVentas();
     Venta v = new Venta();
     BD bd = new BD();
+    Calendar fecha = new GregorianCalendar();
+    int dia = fecha.get(DAY_OF_MONTH);
+    int mes = fecha.get(MONTH);
+    int anio = fecha.get(YEAR);
+    String GUID = "036F676C-6D35-4CEE-B315-DA9D55C43A10";
 
     public PresentadorVentas(pVentas vista, vistaMenu menu) {
         this.ventas = vista;
@@ -83,6 +91,8 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(ventas.btnBuscarCliente)){
             buscarCliente();
+            Cliente cl = buscarCliente();
+            cardarId(cl);            
         }
         if(e.getSource().equals(ventas.btnBuscarP)){
             if(bd.existe(ventas.jtfNombre.getText())){
@@ -144,25 +154,10 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
             total();
         }
         if(e.getSource().equals(ventas.btnRegistarVenta)){
-            cargarVenta();
             
+            cargarVenta();            
             
-            ventas.jtfMonto.setText(ventas.jlTotal.getText());
-            limpiar();
-            DefaultTableModel datos = (DefaultTableModel) ventas.jtLinea.getModel();
-            datos.setRowCount(0);
-            for(int i=0;i<datos.getRowCount();i++){
-                datos.removeRow(i);
-            }
-            
-            showMessageDialog(null,"Venta registrada");
-            ventas.jtfMonto.setEnabled(true);
-            ventas.cbPago.setEnabled(true);
-            
-            ArrayList<FormaDePago> formas = bd.listarFormas();
-            for(int i = 0;i<formas.size();i++){
-                ventas.cbPago.addItem(formas.get(i).getDescripcion());
-            }
+                                    
         }
         if(e.getSource().equals(ventas.btnCancelarVenta)){
             DefaultTableModel datos = (DefaultTableModel) ventas.jtLinea.getModel();
@@ -186,8 +181,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
             showMessageDialog(null, "Venta cancelada");
         }
         if(e.getSource().equals(ventas.btnFinalizarVenta)){
-            limpiar();
-            cardarId(1);       
+            limpiar();      
         }
     }
     
@@ -204,10 +198,11 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
     }
 //    
     private void cargarVenta() {
+        
         String fecha = menu.jlFecha.getText();
         int comprobante = parseInt(ventas.jtfID.getText());
         double total = parseDouble(ventas.jlTotal.getText());
-        Cliente cl = bd.buscarCliente(ventas.jtfCUIT.getText());
+        Cliente cl = bd.buscarCliente(ventas.jtfCUIT.getText());        
         
         ArrayList<LineaDeVenta> lista = new ArrayList<>();
         DefaultTableModel datos = (DefaultTableModel) ventas.jtLinea.getModel();  
@@ -216,36 +211,64 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
             li.setCantidad((int) datos.getValueAt(i, 2));
             
             Producto p = bd.buscarProducto(ventas.jtLinea.getValueAt(i, 0).toString());
+
             li.setProducto(p);
             lista.add(li);
-        }        
-        
+        }                   
+            
         Venta ve = new Venta(fecha,comprobante,total,cl,lista);
-        bd.registrarVenta(ve,parseInt(menu.jlPunto.getText()));
+        FECAEResponse respuesta = autorizacionAFIP(ve);
+        
+        if(respuesta.getFeCabResp().getResultado().equals("A")){
+            bd.registrarVenta(ve,parseInt(menu.jlPunto.getText()));        
+        
+            ventas.jtfMonto.setText(ventas.jlTotal.getText());
+            limpiar();
+            datos.setRowCount(0);
+            for(int i=0;i<datos.getRowCount();i++){
+                datos.removeRow(i);
+            }
+            
+            showMessageDialog(null,"Venta registrada y aprobada");
+            ventas.jtfMonto.setEnabled(true);
+            ventas.cbPago.setEnabled(true);
+            
+            ArrayList<FormaDePago> formas = bd.listarFormas();
+            for(int i = 0;i<formas.size();i++){
+                ventas.cbPago.addItem(formas.get(i).getDescripcion());
+            }
+        }else{
+            showMessageDialog(null, respuesta.getFeDetResp().getFECAEDetResponse().get(0).getObservaciones());
+        }
     }   
 
-    public void cardarId(int sum) {
-        int cod = 1+sum;
+    public void cardarId(Cliente cl) {
         
-        Calendar fecha = new GregorianCalendar();
-        int dia = fecha.get(DAY_OF_MONTH);
-        int mes = fecha.get(MONTH);
-        int anio = fecha.get(YEAR);
+        FEAuthRequest auth = generarAuth();
+        int condTrib = 0;
         
-        String cadena = dia+""+(mes+1)+""+anio+""+cod+"";
+        if(cl.getCondicion().equals("RI")||cl.getCondicion().equals("M")){
+            condTrib = 1;
+        }else{
+            condTrib = 6;
+        }
         
-        out.println(cadena);
-        String idVenta = cadena;
+        Service servicioA = new Service();
+        ServiceSoap loginA = servicioA.getServiceSoap();
+        FERecuperaLastCbteResponse ultimo = loginA.feCompUltimoAutorizado(auth, 25, condTrib);
+        int idVenta = ultimo.getCbteNro()+1;
+        
         ventas.jtfID.setHorizontalAlignment(CENTER);
-        ventas.jtfID.setText(idVenta);
+        ventas.jtfID.setText(""+idVenta);
         ventas.jtfID.setEnabled(false);
     }
 
-    private void buscarCliente() {
+    private Cliente buscarCliente() {
         String cuit = ventas.jtfCUIT.getText();
         Cliente c = bd.buscarCliente(cuit);
         
         ventas.jtfRazonSocial.setText(c.getRazonSocial());
+        return c;
     }
 
     private void buscarProducto() {
@@ -306,5 +329,82 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         ventas.cbTipo.removeAllItems();
         ventas.cbTalle.removeAllItems();
         ventas.cbPago.removeAllItems();
+    }
+
+    private FECAEResponse autorizacionAFIP(Venta ve) {
+        boolean estado = false;
+        int condTrib = 0;
+        double sneto = 0;
+        
+        FEAuthRequest auth = generarAuth();
+                
+        //condicion tributaria
+        if(ve.getCliente().getCondicion().equals("RI")||ve.getCliente().getCondicion().equals("M")){
+            condTrib = 1;
+        }else{
+            condTrib = 6;
+        }
+        
+        //neto e iva
+        for(int i=0; i<ve.getLista().size();i++){
+            double neto = ve.getLista().get(i).getProducto().getCosto() + (ve.getLista().get(i).getProducto().getCosto()*ve.getLista().get(i).getProducto().getMargenGanancia());
+            sneto = sneto+neto;
+        }        
+        
+        //afip
+        Service servicioA = new Service();
+        ServiceSoap loginA = servicioA.getServiceSoap();
+        FERecuperaLastCbteResponse ultimo = loginA.feCompUltimoAutorizado(auth, 25, condTrib);        
+        
+        FECAECabRequest feCabReq = new FECAECabRequest();
+        feCabReq.setPtoVta(25); //constante
+        feCabReq.setCbteTipo(condTrib); //variable
+        feCabReq.setCantReg(1); //constante?
+        
+        ArrayOfAlicIva iva = new ArrayOfAlicIva();
+        AlicIva aliciva = new AlicIva();
+        aliciva.setId(5); //constante?
+        aliciva.setBaseImp(sneto); //variable
+        aliciva.setImporte(sneto*0.21); //variable
+        iva.getAlicIva().add(aliciva);
+        
+        ArrayOfFECAEDetRequest feDetReq = new ArrayOfFECAEDetRequest();
+        FECAEDetRequest det = new FECAEDetRequest();
+        det.setConcepto(1); //constante
+        det.setDocTipo(80); //constante 
+        det.setDocNro(Long.parseLong(ve.getCliente().getCuit())); 
+        det.setCbteDesde(ultimo.getCbteNro()+1);
+        det.setCbteHasta(ultimo.getCbteNro()+1);
+        det.setCbteFch(anio+""+(mes+1)+""+dia);
+        det.setImpTotal(ve.getTotal());
+        det.setImpNeto(sneto);
+        det.setImpIVA(sneto*0.21);
+        det.setMonId("PES");
+        det.setMonCotiz(1);
+        det.setIva(iva);
+        feDetReq.getFECAEDetRequest().add(det);
+                
+        FECAERequest feCAEReq = new FECAERequest();
+        feCAEReq.setFeCabReq(feCabReq);
+        feCAEReq.setFeDetReq(feDetReq);
+                
+        FECAEResponse solicitar = loginA.fecaeSolicitar(auth, feCAEReq);
+                
+        return solicitar;
+    }
+
+    private FEAuthRequest generarAuth() {
+        //wrapper
+        LoginService servicio = new LoginService();
+        ILoginService login = servicio.getSGEAuthService();
+        Autorizacion autorizacion = login.solicitarAutorizacion(GUID);        
+        
+        FEAuthRequest auth = new FEAuthRequest();
+        auth.setCuit(autorizacion.getCuit());
+        auth.setSign(autorizacion.getSign().getValue());
+        auth.setToken(autorizacion.getToken().getValue());
+        String error = autorizacion.getError().getValue();
+        
+        return auth;
     }
 }

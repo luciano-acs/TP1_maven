@@ -33,14 +33,32 @@
                             <wsdlFiles>
                                 <wsdlFile>istp1service.azurewebsites.net/LoginService.svc.wsdl</wsdlFile>
                             </wsdlFiles>
-                            <packageName>Servidor</packageName>
+                            <packageName>Wrapper</packageName>
                             <vmArgs>
                                 <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
                             </vmArgs>
                             <wsdlLocation>http://istp1service.azurewebsites.net/LoginService.svc?wsdl</wsdlLocation>
-                            <staleFile>${project.build.directory}/jaxws/stale/LoginService.svc.stale</staleFile>
+                            <staleFile>${project.build.directory}/jaxws/stale/LoginService.svc_1.stale</staleFile>
                         </configuration>
-                        <id>wsimport-generate-LoginService.svc</id>
+                        <id>wsimport-generate-LoginService.svc_1</id>
+                        <phase>generate-sources</phase>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>wswhomo.afip.gov.ar/wsfev1/service.asmx.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>AFIP</packageName>
+                            <vmArgs>
+                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                            </vmArgs>
+                            <wsdlLocation>https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL</wsdlLocation>
+                            <staleFile>${project.build.directory}/jaxws/stale/service.asmx.stale</staleFile>
+                        </configuration>
+                        <id>wsimport-generate-service.asmx</id>
                         <phase>generate-sources</phase>
                     </execution>
                 </executions>

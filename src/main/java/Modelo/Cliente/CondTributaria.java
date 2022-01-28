@@ -2,11 +2,11 @@ package Modelo.Cliente;
 
 public enum CondTributaria {
 
-    Responsable_Inscripto("Responsable_Inscripto"),
-    Monotributo("Monotributo"),
-    Exento("Exento"),
-    No_Responsable("No_Responsable"),
-    Consumidor_Final("Consumidor_Final");
+    Responsable_Inscripto("RI"),
+    Monotributo("M"),
+    Exento("E"),
+    No_Responsable("NR"),
+    Consumidor_Final("CF");
     
     private String condicion;
     
