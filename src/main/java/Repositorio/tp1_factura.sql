@@ -24,10 +24,9 @@ DROP TABLE IF EXISTS `factura`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `factura` (
   `numFactura` int NOT NULL,
-  `fecha` datetime DEFAULT NULL,
+  `fecha` varchar(8) DEFAULT NULL,
   `total` double DEFAULT NULL,
   `Venta_idVenta` int DEFAULT NULL,
-  PRIMARY KEY (`numFactura`),
   KEY `fk__idx` (`Venta_idVenta`),
   CONSTRAINT `fk_Factura_Venta1` FOREIGN KEY (`Venta_idVenta`) REFERENCES `venta` (`idVenta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -39,6 +38,7 @@ CREATE TABLE `factura` (
 
 LOCK TABLES `factura` WRITE;
 /*!40000 ALTER TABLE `factura` DISABLE KEYS */;
+INSERT INTO `factura` VALUES (9,'20220129',28586.25,202201291);
 /*!40000 ALTER TABLE `factura` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-18 21:54:42
+-- Dump completed on 2022-01-29 16:03:58

@@ -44,6 +44,9 @@ public class vistaMenu extends javax.swing.JFrame {
         btnListarProd = new javax.swing.JButton();
         btnNvoCliente = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        btnGestiones = new javax.swing.JButton();
+        btnDevoluciones = new javax.swing.JButton();
+        btnListarVentas = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jlLegajo = new javax.swing.JLabel();
         jlEmpleado = new javax.swing.JLabel();
@@ -56,7 +59,6 @@ public class vistaMenu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(950, 800));
         setResizable(false);
         setSize(new java.awt.Dimension(400, 400));
 
@@ -163,14 +165,52 @@ public class vistaMenu extends javax.swing.JFrame {
             }
         });
 
+        btnGestiones.setBackground(new java.awt.Color(0, 0, 0));
+        btnGestiones.setForeground(new java.awt.Color(255, 255, 255));
+        btnGestiones.setText("Gestiones");
+        btnGestiones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnGestionesMousePressed(evt);
+            }
+        });
+        btnGestiones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionesActionPerformed(evt);
+            }
+        });
+
+        btnDevoluciones.setBackground(new java.awt.Color(0, 0, 0));
+        btnDevoluciones.setForeground(new java.awt.Color(255, 255, 255));
+        btnDevoluciones.setText("Devoluciones");
+        btnDevoluciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnDevolucionesMousePressed(evt);
+            }
+        });
+        btnDevoluciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDevolucionesActionPerformed(evt);
+            }
+        });
+
+        btnListarVentas.setBackground(new java.awt.Color(0, 0, 0));
+        btnListarVentas.setForeground(new java.awt.Color(255, 255, 255));
+        btnListarVentas.setText("Listado");
+        btnListarVentas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnListarVentasMousePressed(evt);
+            }
+        });
+        btnListarVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListarVentasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addComponent(jlClientes)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -179,9 +219,12 @@ public class vistaMenu extends javax.swing.JFrame {
                                 .addGap(70, 70, 70)
                                 .addComponent(jlVentas))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(60, 60, 60)
+                                .addGap(67, 67, 67)
+                                .addComponent(jlClientes))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(61, 61, 61)
                                 .addComponent(jlProductos)))
-                        .addGap(0, 49, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,7 +243,10 @@ public class vistaMenu extends javax.swing.JFrame {
                             .addComponent(jSeparator5)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnGestiones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnDevoluciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnListarVentas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -212,9 +258,13 @@ public class vistaMenu extends javax.swing.JFrame {
                 .addComponent(jlVentas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnVentas)
-                .addGap(104, 104, 104)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnDevoluciones)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnListarVentas)
+                .addGap(24, 24, 24)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jlProductos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnNvoProducto)
@@ -222,15 +272,17 @@ public class vistaMenu extends javax.swing.JFrame {
                 .addComponent(btnModProducto)
                 .addGap(11, 11, 11)
                 .addComponent(btnListarProd)
-                .addGap(31, 31, 31)
+                .addGap(11, 11, 11)
+                .addComponent(btnGestiones)
+                .addGap(24, 24, 24)
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jlClientes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnNvoCliente)
                 .addGap(11, 11, 11)
                 .addComponent(btnClientes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -283,7 +335,7 @@ public class vistaMenu extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jlEmpleado)
                     .addComponent(jlPto))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(31, 192, 132));
@@ -387,6 +439,12 @@ public class vistaMenu extends javax.swing.JFrame {
         btnListarProd.setForeground(Color.white);
         btnModProducto.setBackground(Color.black);
         btnModProducto.setForeground(Color.white);
+        btnGestiones.setBackground(Color.black);
+        btnGestiones.setForeground(Color.white);
+        btnDevoluciones.setBackground(Color.black);
+        btnDevoluciones.setForeground(Color.white);
+        btnListarVentas.setBackground(Color.black);
+        btnListarVentas.setForeground(Color.white);
     }//GEN-LAST:event_btnNvoClienteMousePressed
 
     private void btnListarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarProdActionPerformed
@@ -406,6 +464,12 @@ public class vistaMenu extends javax.swing.JFrame {
         btnListarProd.setForeground(Color.black);
         btnModProducto.setBackground(Color.black);
         btnModProducto.setForeground(Color.white);
+        btnGestiones.setBackground(Color.black);
+        btnGestiones.setForeground(Color.white);
+        btnDevoluciones.setBackground(Color.black);
+        btnDevoluciones.setForeground(Color.white);
+        btnListarVentas.setBackground(Color.black);
+        btnListarVentas.setForeground(Color.white);
     }//GEN-LAST:event_btnListarProdMousePressed
 
     private void btnModProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModProductoActionPerformed
@@ -425,6 +489,12 @@ public class vistaMenu extends javax.swing.JFrame {
         btnListarProd.setForeground(Color.white);
         btnModProducto.setBackground(Color.white);
         btnModProducto.setForeground(Color.black);
+        btnGestiones.setBackground(Color.black);
+        btnGestiones.setForeground(Color.white);
+        btnDevoluciones.setBackground(Color.black);
+        btnDevoluciones.setForeground(Color.white);
+        btnListarVentas.setBackground(Color.black);
+        btnListarVentas.setForeground(Color.white);
     }//GEN-LAST:event_btnModProductoMousePressed
 
     private void btnClientesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClientesMousePressed
@@ -440,6 +510,12 @@ public class vistaMenu extends javax.swing.JFrame {
         btnListarProd.setForeground(Color.white);
         btnModProducto.setBackground(Color.black);
         btnModProducto.setForeground(Color.white);
+        btnGestiones.setBackground(Color.black);
+        btnGestiones.setForeground(Color.white);
+        btnDevoluciones.setBackground(Color.black);
+        btnDevoluciones.setForeground(Color.white);
+        btnListarVentas.setBackground(Color.black);
+        btnListarVentas.setForeground(Color.white);
     }//GEN-LAST:event_btnClientesMousePressed
 
     private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
@@ -459,6 +535,12 @@ public class vistaMenu extends javax.swing.JFrame {
         btnListarProd.setForeground(Color.white);
         btnModProducto.setBackground(Color.black);
         btnModProducto.setForeground(Color.white);
+        btnGestiones.setBackground(Color.black);
+        btnGestiones.setForeground(Color.white);
+        btnDevoluciones.setBackground(Color.black);
+        btnDevoluciones.setForeground(Color.white);
+        btnListarVentas.setBackground(Color.black);
+        btnListarVentas.setForeground(Color.white);
     }//GEN-LAST:event_btnVentasMousePressed
 
     private void btnNvoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNvoProductoActionPerformed
@@ -478,11 +560,92 @@ public class vistaMenu extends javax.swing.JFrame {
         btnListarProd.setForeground(Color.white);
         btnModProducto.setBackground(Color.black);
         btnModProducto.setForeground(Color.white);
+        btnGestiones.setBackground(Color.black);
+        btnGestiones.setForeground(Color.white);
+        btnDevoluciones.setBackground(Color.black);
+        btnDevoluciones.setForeground(Color.white);
+        btnListarVentas.setBackground(Color.black);
+        btnListarVentas.setForeground(Color.white);
     }//GEN-LAST:event_btnNvoProductoMousePressed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnGestionesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGestionesMousePressed
+        btnVentas.setBackground(Color.black);
+        btnVentas.setForeground(Color.white);
+        btnNvoProducto.setBackground(Color.black);
+        btnNvoProducto.setForeground(Color.white);
+        btnClientes.setBackground(Color.black);
+        btnClientes.setForeground(Color.white);
+        btnNvoCliente.setBackground(Color.black);
+        btnNvoCliente.setForeground(Color.white);
+        btnListarProd.setBackground(Color.black);
+        btnListarProd.setForeground(Color.white);
+        btnModProducto.setBackground(Color.black);
+        btnModProducto.setForeground(Color.white);
+        btnGestiones.setBackground(Color.white);
+        btnGestiones.setForeground(Color.black);
+        btnDevoluciones.setBackground(Color.black);
+        btnDevoluciones.setForeground(Color.white);
+        btnListarVentas.setBackground(Color.black);
+        btnListarVentas.setForeground(Color.white);
+    }//GEN-LAST:event_btnGestionesMousePressed
+
+    private void btnGestionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGestionesActionPerformed
+
+    private void btnDevolucionesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDevolucionesMousePressed
+        btnVentas.setBackground(Color.black);
+        btnVentas.setForeground(Color.white);
+        btnNvoProducto.setBackground(Color.black);
+        btnNvoProducto.setForeground(Color.white);
+        btnClientes.setBackground(Color.black);
+        btnClientes.setForeground(Color.white);
+        btnNvoCliente.setBackground(Color.black);
+        btnNvoCliente.setForeground(Color.white);
+        btnListarProd.setBackground(Color.black);
+        btnListarProd.setForeground(Color.white);
+        btnModProducto.setBackground(Color.black);
+        btnModProducto.setForeground(Color.white);
+        btnGestiones.setBackground(Color.black);
+        btnGestiones.setForeground(Color.white);
+        btnDevoluciones.setBackground(Color.white);
+        btnDevoluciones.setForeground(Color.black);
+        btnListarVentas.setBackground(Color.black);
+        btnListarVentas.setForeground(Color.white);
+    }//GEN-LAST:event_btnDevolucionesMousePressed
+
+    private void btnDevolucionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevolucionesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDevolucionesActionPerformed
+
+    private void btnListarVentasMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnListarVentasMousePressed
+        btnVentas.setBackground(Color.black);
+        btnVentas.setForeground(Color.white);
+        btnNvoProducto.setBackground(Color.black);
+        btnNvoProducto.setForeground(Color.white);
+        btnClientes.setBackground(Color.black);
+        btnClientes.setForeground(Color.white);
+        btnNvoCliente.setBackground(Color.black);
+        btnNvoCliente.setForeground(Color.white);
+        btnListarProd.setBackground(Color.black);
+        btnListarProd.setForeground(Color.white);
+        btnModProducto.setBackground(Color.black);
+        btnModProducto.setForeground(Color.white);
+        btnGestiones.setBackground(Color.black);
+        btnGestiones.setForeground(Color.white);
+        btnDevoluciones.setBackground(Color.black);
+        btnDevoluciones.setForeground(Color.white);
+        btnListarVentas.setBackground(Color.white);
+        btnListarVentas.setForeground(Color.black);
+    }//GEN-LAST:event_btnListarVentasMousePressed
+
+    private void btnListarVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarVentasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnListarVentasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -524,7 +687,10 @@ public class vistaMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnClientes;
+    public javax.swing.JButton btnDevoluciones;
+    public javax.swing.JButton btnGestiones;
     public javax.swing.JButton btnListarProd;
+    public javax.swing.JButton btnListarVentas;
     public javax.swing.JButton btnModProducto;
     public javax.swing.JButton btnNvoCliente;
     public javax.swing.JButton btnNvoProducto;

@@ -39,7 +39,7 @@ CREATE TABLE `color_has_stock` (
 
 LOCK TABLES `color_has_stock` WRITE;
 /*!40000 ALTER TABLE `color_has_stock` DISABLE KEYS */;
-INSERT INTO `color_has_stock` VALUES (1,1,5),(1,1,5),(2,1,5),(2,2,5);
+INSERT INTO `color_has_stock` VALUES (1,1,5),(1,1,5),(2,1,0),(2,2,5);
 /*!40000 ALTER TABLE `color_has_stock` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-18 21:54:41
+-- Dump completed on 2022-01-29 16:03:57

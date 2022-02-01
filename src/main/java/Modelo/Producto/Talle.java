@@ -8,6 +8,10 @@ public class Talle {
         this.idTalle = idTalle;
         this.descripcion = descripcion;
     }
+    
+    public Talle() {
+        
+    }
 
     public String getDescripcion() {
         return descripcion;

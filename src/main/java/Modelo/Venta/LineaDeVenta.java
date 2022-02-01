@@ -4,16 +4,18 @@ public class LineaDeVenta {
 
     private Producto producto;
     private int cantidad;
+    private double subtotal;
 
-    public LineaDeVenta(Producto producto, int cantidad) {
+    public LineaDeVenta(Producto producto, int cantidad, double subtotal) {
         this.producto = producto;
         this.cantidad = cantidad;
+        this.subtotal = subtotal;
     }
 
     public LineaDeVenta() {
         
     }
-
+    
     public Producto getProducto() {
         return producto;
     }
@@ -28,5 +30,13 @@ public class LineaDeVenta {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
     }
 }

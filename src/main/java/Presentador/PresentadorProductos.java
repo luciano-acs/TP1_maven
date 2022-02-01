@@ -1,6 +1,7 @@
 package Presentador;
 
 import Modelo.BD.BD;
+import Modelo.Producto.Auxiliar;
 import Modelo.Producto.ColorP;
 import Modelo.Producto.Marca;
 import Modelo.Producto.Producto;
@@ -11,6 +12,8 @@ import Modelo.Producto.TipoDeTalle;
 import Vista.pListarProductos;
 import Vista.pModProductos;
 import Vista.pProductos;
+import Vista.pgestiones;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -44,6 +47,10 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
     pProductos productos = new pProductos();
     Producto producto = new Producto();
     pModProductos modProductos = new pModProductos();
+    pgestiones gestionar = new pgestiones();
+    
+    Color verdeClaro = new Color(31,192,132);
+    Color verdeOscuro = new Color(12,72,56);
     BD bd = new BD();
     int suma = 0;
             
@@ -67,6 +74,16 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         modProductos.cbTipo.addItemListener(this);
         modProductos.btnBuscarP.addActionListener(this);
         modProductos.btnModProd.addActionListener(this);
+    }
+    
+    public PresentadorProductos(pgestiones gestion){
+        this.gestionar = gestion;
+        gestionar.cbTipo.addItemListener(this);
+        gestionar.cbTarea.addItemListener(this);
+        gestionar.btnBuscarP.addActionListener(this);
+        gestionar.btnAgregarColor.addActionListener(this);
+        gestionar.btnAgregarMarca.addActionListener(this);
+        gestionar.btnAgregarCantidad.addActionListener(this);
     }
     
     @Override
@@ -121,14 +138,25 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
             datos.removeRow(productos.jtStock.getSelectedRow());
             out.println(suma);
         }
-    }
-
-    private void calcularPrecio() {
-//        double costo = Double.parseDouble(productos.jtfCosto.getText());
-//        double iva = Double.parseDouble(productos.jtfIVA.getText());
-//        double margen = Double.parseDouble(productos.jtfMargen.getText());
-//        
-//        productos.jtfPrecio.setText(String.valueOf(producto.calcularPrecio(costo, iva, margen)));
+        if(e.getSource().equals(gestionar.btnAgregarColor)){
+            ColorP color = new ColorP(bd.ultimoCodColor(),gestionar.jtfNuvoColor.getText());
+            bd.agregarColor(color);
+            listarTablaGestion();
+            gestionar.jtfNuvoColor.setText("");
+        }
+        if(e.getSource().equals(gestionar.btnAgregarMarca)){
+            Marca marca = new Marca(bd.ultimoCodMarca(),gestionar.jtfNvaMarca.getText());
+            bd.agregarMarca(marca);
+            listarTablaGestion();
+            gestionar.jtfNvaMarca.setText("");
+        }
+        if(e.getSource().equals(gestionar.btnBuscarP)){
+            agregarCaracteristica();
+        }
+        if(e.getSource().equals(gestionar.btnAgregarCantidad)){
+            actualizarStock();
+            agregarCaracteristica();
+        }
     }
 
     private void agregarProductoSolo() {
@@ -184,6 +212,7 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         listarTabla();       
         showMessageDialog(null, "Producto agregado con exito");
     }
+    
     public void listarTabla() {
         DefaultTableModel datos = (DefaultTableModel) listaProd.jtProductos.getModel();
         datos.setNumRows(0);
@@ -288,6 +317,17 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
             }
         }
         if(e.getStateChange()==SELECTED){
+            gestionar.cbTalle.removeAllItems();
+            if(gestionar.cbTipo.getSelectedIndex()>-1){
+                BD bd = new BD();
+                int cod = bd.buscarCodTipo(gestionar.cbTipo.getSelectedItem().toString());        
+                ArrayList<Talle> talle =  bd.buscarTalle(cod);
+                for(int i =0;i<talle.size();i++){
+                    gestionar.cbTalle.addItem(talle.get(i).getDescripcion());            
+                }
+            }
+        }
+        if(e.getStateChange()==SELECTED){
             modProductos.cbTalle.removeAllItems();
             if(modProductos.cbTipo.getSelectedIndex()>-1){
                 BD bd = new BD();
@@ -296,6 +336,83 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
                 for(int i =0;i<talle.size();i++){
                     modProductos.cbTalle.addItem(talle.get(i).getDescripcion());            
                 }
+            }
+        }
+        if(e.getStateChange()==SELECTED){
+            if(gestionar.cbTarea.getSelectedIndex()>-1){
+                if(gestionar.cbTarea.getSelectedItem().equals("Marca")){
+                    gestionar.jlMarca.setForeground(verdeClaro);
+                    gestionar.jlColor.setForeground(verdeOscuro);
+                    gestionar.jlStock.setForeground(verdeOscuro);
+                    
+                    gestionar.jtfNvaMarca.setEnabled(true);
+                    gestionar.btnAgregarMarca.setEnabled(true);
+                    gestionar.jtMarca.setEnabled(true);
+                    
+                    gestionar.jtfNuvoColor.setEnabled(false);
+                    gestionar.btnAgregarColor.setEnabled(false);
+                    gestionar.jtColor.setEnabled(false);
+                    
+                    gestionar.jtfCantidad.setEnabled(false);
+                    gestionar.jtfDescripcion.setEnabled(false);
+                    gestionar.jtfMarca.setEnabled(false);
+                    gestionar.jtfNombre.setEnabled(false);
+                    gestionar.btnAgregarCantidad.setEnabled(false);
+                    gestionar.btnBuscarP.setEnabled(false);
+                    gestionar.cbColor.setEnabled(false);
+                    gestionar.cbTalle.setEnabled(false);
+                    gestionar.cbTipo.setEnabled(false);
+                    gestionar.jtCaracteristicas.setEnabled(false);
+                }
+                if(gestionar.cbTarea.getSelectedItem().equals("Color")){
+                    gestionar.jlMarca.setForeground(verdeOscuro);
+                    gestionar.jlColor.setForeground(verdeClaro);
+                    gestionar.jlStock.setForeground(verdeOscuro);
+                    
+                    gestionar.jtfNuvoColor.setEnabled(true);
+                    gestionar.btnAgregarColor.setEnabled(true);
+                    gestionar.jtColor.setEnabled(true);
+                    
+                    gestionar.jtfNvaMarca.setEnabled(false);
+                    gestionar.btnAgregarMarca.setEnabled(false);
+                    gestionar.jtMarca.setEnabled(false);
+                    
+                    gestionar.jtfCantidad.setEnabled(false);
+                    gestionar.jtfDescripcion.setEnabled(false);
+                    gestionar.jtfMarca.setEnabled(false);
+                    gestionar.jtfNombre.setEnabled(false);
+                    gestionar.btnAgregarCantidad.setEnabled(false);
+                    gestionar.btnBuscarP.setEnabled(false);
+                    gestionar.cbColor.setEnabled(false);
+                    gestionar.cbTalle.setEnabled(false);
+                    gestionar.cbTipo.setEnabled(false);
+                    gestionar.jtCaracteristicas.setEnabled(false);
+                }
+                if(gestionar.cbTarea.getSelectedItem().equals("Stock")){
+                    gestionar.jlMarca.setForeground(verdeOscuro);
+                    gestionar.jlColor.setForeground(verdeOscuro);
+                    gestionar.jlStock.setForeground(verdeClaro);
+                    
+                    gestionar.jtfCantidad.setEnabled(true);
+                    gestionar.jtfDescripcion.setEnabled(true);
+                    gestionar.jtfMarca.setEnabled(true);
+                    gestionar.jtfNombre.setEnabled(true);
+                    gestionar.btnAgregarCantidad.setEnabled(true);
+                    gestionar.btnBuscarP.setEnabled(true);
+                    gestionar.cbColor.setEnabled(true);
+                    gestionar.cbTalle.setEnabled(true);
+                    gestionar.cbTipo.setEnabled(true);
+                    gestionar.jtCaracteristicas.setEnabled(true);
+                    
+                    gestionar.jtfNuvoColor.setEnabled(false);
+                    gestionar.btnAgregarColor.setEnabled(false);
+                    gestionar.jtColor.setEnabled(false);
+                    
+                    gestionar.jtfNvaMarca.setEnabled(false);
+                    gestionar.btnAgregarMarca.setEnabled(false);
+                    gestionar.jtMarca.setEnabled(false);
+                }
+                
             }
         }
     }
@@ -370,6 +487,86 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
             int codProducto = (int) listaProd.jtProductos.getValueAt(fila, 0);
             bd.eliminarProducto(codProducto);
         } 
+    }
+
+    public void cargarCombosGestiones() {
+        gestionar.cbTalle.removeAllItems();
+        gestionar.cbColor.removeAllItems();
+        gestionar.cbTipo.removeAllItems();        
+        
+        ArrayList<TipoDeTalle> tipo = bd.listarTipoTalle();
+        ArrayList<Modelo.Producto.ColorP> color = bd.listarColor();
+        
+        for(int i =0;i<tipo.size();i++){
+            gestionar.cbTipo.addItem(tipo.get(i).getDescripcion());
+        }
+        for(int i =0;i<color.size();i++){
+            gestionar.cbColor.addItem(color.get(i).getDescripcion());
+        }
+    }
+
+    public void listarTablaGestion() {
+        DefaultTableModel datosColor = (DefaultTableModel) gestionar.jtColor.getModel();
+        datosColor.setNumRows(0);
+        
+        ArrayList<ColorP> listaColor = bd.listarColor();
+        
+        for(int i = 0;i<listaColor.size();i++){
+            Object[] fila = {listaColor.get(i).getDescripcion()
+                            };
+            
+            datosColor.addRow(fila);
+        }
+        
+        DefaultTableModel datosMarca = (DefaultTableModel) gestionar.jtMarca.getModel();
+        datosMarca.setNumRows(0);
+        
+        ArrayList<Marca> listaMarcas = bd.listarMarcas();
+        
+        for(int i = 0;i<listaMarcas.size();i++){
+            Object[] fila = {listaMarcas.get(i).getDescripcionM()
+                            };
+            
+            datosMarca.addRow(fila);
+        }
+    }
+
+    private void agregarCaracteristica() {
+        if(bd.existe(gestionar.jtfNombre.getText())){
+            DefaultTableModel datosProductos = (DefaultTableModel) gestionar.jtCaracteristicas.getModel();
+            datosProductos.setNumRows(0);
+        
+            Producto p = bd.buscarProducto(gestionar.jtfNombre.getText());
+            gestionar.jtfDescripcion.setText(p.getDescripcion());
+            gestionar.jtfMarca.setText(p.getMarca().getDescripcionM());
+            gestionar.jtfDescripcion.setEnabled(false);
+            gestionar.jtfMarca.setEnabled(false);
+        
+            ArrayList<Auxiliar> listaCarac = bd.listarCaracteristicas(""+p.getCodigo());
+        
+            for(int i = 0;i<listaCarac.size();i++){
+                Object[] fila = {listaCarac.get(i).getTalle(),
+                                 listaCarac.get(i).getColor(),
+                                 listaCarac.get(i).getCantidad(),
+                                };
+            
+            datosProductos.addRow(fila);
+            }
+        }else{
+            showMessageDialog(null, "El producto no exite");
+            gestionar.jtfNombre.setText("");
+        }
+    }
+
+    private void actualizarStock() {
+        String codigo = gestionar.jtfNombre.getText();
+        int cant = Integer.parseInt(gestionar.jtfCantidad.getText());
+            
+        Producto p = bd.buscarProducto(codigo);    
+        Talle t = new Talle(bd.buscarCodTalle((String) gestionar.cbTalle.getSelectedItem()),(String) gestionar.cbTalle.getSelectedItem());
+        ColorP co = new ColorP(bd.buscarCodColor((String) gestionar.cbColor.getSelectedItem()),(String) gestionar.cbColor.getSelectedItem());
+            
+        bd.actualizarStockG(p.getCodigo(),cant,t,co);
     }
     
 }

@@ -30,6 +30,8 @@ import Wrapper.ObjectFactory;
 import Wrapper.SolicitarAutorizacion;
 import java.io.File;
 import static java.lang.System.out;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
@@ -46,7 +48,15 @@ public class Principal{
         Sesion inicio = new Sesion();
         PresentadorInicio iniciar = new PresentadorInicio(inicio);
         
-      
+       
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+//        System.out.println(dtf.format(LocalDateTime.now()));
+//        PresentadorVentas pv = new PresentadorVentas();
+//        FEAuthRequest auth = pv.generarAuth();
+//        Service servicioA = new Service();
+//        ServiceSoap loginA = servicioA.getServiceSoap();
+//        FERecuperaLastCbteResponse ultimo = loginA.feCompUltimoAutorizado(auth, 25, 6);
+//        System.out.println(ultimo.getCbteNro()+1);
 //        DummyResponse comprobar = loginA.feDummy();
         
         

@@ -2,14 +2,20 @@ package Presentador;
 
 import Modelo.BD.BD;
 import Modelo.Organizacion.Empleado;
+import Vista.pFactura;
 import Vista.Sesion;
+import Vista.nvoCliente;
 import Vista.pClientes;
+import Vista.pDevoluciones;
 import Vista.pListarProductos;
+import Vista.pListarVentas;
 import Vista.pLogo;
 import Vista.pModProductos;
 import Vista.pProductos;
 import Vista.pVentas;
+import Vista.pgestiones;
 import Vista.vistaMenu;
+import com.google.protobuf.Field;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
@@ -30,7 +36,13 @@ public class PresentadorMenu implements ActionListener{
     pListarProductos listaProd = new pListarProductos();
     pLogo logo = new pLogo();
     pModProductos modProductos = new pModProductos();
+    pFactura factura = new pFactura();
+    pgestiones gestion = new pgestiones();
+    pDevoluciones devolucion = new pDevoluciones();
+    pListarVentas listaVentas = new pListarVentas();
+    
     BD bd = new BD();
+    nvoCliente nvoCliente = new nvoCliente();
     
     public PresentadorMenu(vistaMenu vista, Sesion sesion, Empleado emp) {
         this.principal = vista;
@@ -42,6 +54,9 @@ public class PresentadorMenu implements ActionListener{
         this.principal.btnModProducto.addActionListener(this);
         this.principal.btnNvoCliente.addActionListener(this);
         this.principal.btnSalir.addActionListener(this);
+        this.principal.btnGestiones.addActionListener(this);
+        this.principal.btnListarVentas.addActionListener(this);
+        this.principal.btnDevoluciones.addActionListener(this);
         
         principal.jlProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/moda.png")));
         principal.jlVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/ventas (1).png"))); // NOI18N
@@ -59,6 +74,9 @@ public class PresentadorMenu implements ActionListener{
         principal.add(logo); 
         principal.add(listaProd); 
         principal.add(modProductos);
+        principal.add(gestion);
+        principal.add(devolucion);
+        principal.add(listaVentas);
         
         logo.setVisible(true);
         productos.setVisible(false);
@@ -66,6 +84,9 @@ public class PresentadorMenu implements ActionListener{
         clientes.setVisible(false); 
         listaProd.setVisible(false);
         modProductos.setVisible(false);
+        gestion.setVisible(false);
+        devolucion.setVisible(false);
+        listaVentas.setVisible(false);
         
         logo.setBounds(250, 100, 700, 700);
         productos.setBounds(250, 100, 700, 700);
@@ -73,6 +94,9 @@ public class PresentadorMenu implements ActionListener{
         clientes.setBounds(250, 100, 700, 700);
         listaProd.setBounds(250, 100, 700, 700);
         modProductos.setBounds(250, 100, 700, 700);
+        gestion.setBounds(250,100,700,700);
+        devolucion.setBounds(250,100,700,700);
+        listaVentas.setBounds(250,100,700,700);
         
         Calendar fecha = new GregorianCalendar();
         int mes = fecha.get(MONTH);
@@ -82,14 +106,13 @@ public class PresentadorMenu implements ActionListener{
         
         if(emp.getRol().equals("G")){
             
-        }else if(emp.getRol().equals("V")){
+        }if(emp.getRol().equals("V")){
             principal.btnClientes.setEnabled(false);
             principal.btnListarProd.setEnabled(false);
             principal.btnModProducto.setEnabled(false);
             principal.btnNvoCliente.setEnabled(false);
             principal.btnNvoProducto.setEnabled(false);
-        }else{
-            
+            principal.btnGestiones.setEnabled(false);
         }
     }
 
@@ -100,71 +123,151 @@ public class PresentadorMenu implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==principal.btnNvoProducto){            
-            productos.setVisible(true);
             principal.jlLogo.setVisible(true);
             principal.jlLogo1.setVisible(false);
             
+            productos.setVisible(true); //
             logo.setVisible(false);
             ventas.setVisible(false);
             clientes.setVisible(false);
             listaProd.setVisible(false);            
             modProductos.setVisible(false);
+            gestion.setVisible(false);
             
             PresentadorProductos pp = new PresentadorProductos(productos);
             pp.cargarCombos();
             pp.borrarjtf();
         }
         if(e.getSource()==principal.btnVentas){
-            productos.setVisible(false);
             principal.jlLogo.setVisible(true);
             principal.jlLogo1.setVisible(false);
             
+            productos.setVisible(false);
             logo.setVisible(false);
-            ventas.setVisible(true);     
+            ventas.setVisible(true);     //
             clientes.setVisible(false);            
             listaProd.setVisible(false);
             modProductos.setVisible(false);
+            gestion.setVisible(false);
+            devolucion.setVisible(false);
+            listaVentas.setVisible(false);
             
-            PresentadorVentas pv = new PresentadorVentas(ventas,principal);            
+            PresentadorVentas pv = new PresentadorVentas(ventas,principal);      
+            pv.cardarId();
         }
         if(e.getSource()==principal.btnClientes){
-            productos.setVisible(false);
             principal.jlLogo.setVisible(true);
             principal.jlLogo1.setVisible(false);
             
+            productos.setVisible(false);
             logo.setVisible(false);
             ventas.setVisible(false);     
-            clientes.setVisible(true);            
+            clientes.setVisible(true);          //  
             listaProd.setVisible(false);
             modProductos.setVisible(false);
+            gestion.setVisible(false);
+            devolucion.setVisible(false);
+            listaVentas.setVisible(false);
+            
+            PresentadorClientes pc = new PresentadorClientes(clientes);
+            pc.listarTabla();
+        }
+        if(e.getSource().equals(principal.btnNvoCliente)){
+            logo.setVisible(false);
+            ventas.setVisible(false);     
+            clientes.setVisible(false);            
+            listaProd.setVisible(false);
+            modProductos.setVisible(false);
+            gestion.setVisible(false);
+            devolucion.setVisible(false);
+            listaVentas.setVisible(false);
+            
+            PresentadorClientes pc = new PresentadorClientes(nvoCliente);
+            nvoCliente.setVisible(true); //
         }
         if(e.getSource()==principal.btnListarProd){
-            productos.setVisible(false);
             principal.jlLogo.setVisible(true);
             principal.jlLogo1.setVisible(false);
             
-            listaProd.setVisible(true);
+            productos.setVisible(false);
+            listaProd.setVisible(true); //
             logo.setVisible(false);
             ventas.setVisible(false);     
             clientes.setVisible(false);
             modProductos.setVisible(false);
+            gestion.setVisible(false);
+            devolucion.setVisible(false); 
+            listaVentas.setVisible(false);
             
             PresentadorProductos pp = new PresentadorProductos(listaProd);
             pp.listarTabla();
         } 
         if(e.getSource().equals(principal.btnModProducto)){
-            productos.setVisible(false);
             principal.jlLogo.setVisible(true);
             principal.jlLogo1.setVisible(false);
             
+            productos.setVisible(false);
             listaProd.setVisible(false);
             logo.setVisible(false);
             ventas.setVisible(false);     
             clientes.setVisible(false);
-            modProductos.setVisible(true);
+            modProductos.setVisible(true); //
+            gestion.setVisible(false);            
+            devolucion.setVisible(false);
+            listaVentas.setVisible(false);
             
             PresentadorProductos pp = new PresentadorProductos(modProductos);
             pp.cargarCombosM();
+        }
+        if(e.getSource().equals(principal.btnGestiones)){
+            principal.jlLogo.setVisible(true);
+            principal.jlLogo1.setVisible(false);
+            
+            productos.setVisible(false);
+            listaProd.setVisible(false);
+            logo.setVisible(false);
+            ventas.setVisible(false);     
+            clientes.setVisible(false);
+            modProductos.setVisible(false);
+            gestion.setVisible(true); //
+            devolucion.setVisible(false); 
+            listaVentas.setVisible(false);
+            
+            PresentadorProductos pp = new PresentadorProductos(gestion);
+            pp.cargarCombosGestiones();
+            pp.listarTablaGestion();
+        }
+        if(e.getSource().equals(principal.btnDevoluciones)){
+            principal.jlLogo.setVisible(true);
+            principal.jlLogo1.setVisible(false);
+            
+            productos.setVisible(false);
+            listaProd.setVisible(false);
+            logo.setVisible(false);
+            ventas.setVisible(false);     
+            clientes.setVisible(false);
+            modProductos.setVisible(false);
+            gestion.setVisible(false); 
+            devolucion.setVisible(true); //
+            listaVentas.setVisible(false);
+            
+            PresentadorVentas pv = new PresentadorVentas(devolucion);            
+        }
+        if(e.getSource().equals(principal.btnListarVentas)){
+            principal.jlLogo.setVisible(true);
+            principal.jlLogo1.setVisible(false);
+            
+            productos.setVisible(false);
+            listaProd.setVisible(false);
+            logo.setVisible(false);
+            ventas.setVisible(false);     
+            clientes.setVisible(false);
+            modProductos.setVisible(false);
+            gestion.setVisible(false); 
+            devolucion.setVisible(false); 
+            listaVentas.setVisible(true); //
+            
+            PresentadorVentas pv = new PresentadorVentas(listaVentas);            
         }
         if(e.getSource()==principal.btnSalir){
             principal.dispose(); 

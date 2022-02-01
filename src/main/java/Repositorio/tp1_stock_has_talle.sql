@@ -39,7 +39,7 @@ CREATE TABLE `stock_has_talle` (
 
 LOCK TABLES `stock_has_talle` WRITE;
 /*!40000 ALTER TABLE `stock_has_talle` DISABLE KEYS */;
-INSERT INTO `stock_has_talle` VALUES (1,11,5),(1,12,5),(2,8,5),(2,9,5);
+INSERT INTO `stock_has_talle` VALUES (1,11,5),(1,12,5),(2,8,0),(2,9,5);
 /*!40000 ALTER TABLE `stock_has_talle` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-18 21:54:43
+-- Dump completed on 2022-01-29 16:03:57

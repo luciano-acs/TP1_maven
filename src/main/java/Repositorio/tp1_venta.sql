@@ -24,15 +24,15 @@ DROP TABLE IF EXISTS `venta`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `venta` (
   `idVenta` int NOT NULL,
-  `fecha` datetime DEFAULT NULL,
+  `fecha` varchar(8) DEFAULT NULL,
   `total` double DEFAULT NULL,
-  `Punto de Venta_idPDV` int NOT NULL,
+  `Punto_de_Venta_idPDV` int NOT NULL,
   `Cliente_cuit` varchar(45) NOT NULL,
   PRIMARY KEY (`idVenta`),
-  KEY `fk_Venta_Punto de Venta1_idx` (`Punto de Venta_idPDV`),
+  KEY `fk_Venta_Punto de Venta1_idx` (`Punto_de_Venta_idPDV`),
   KEY `fk_Venta_Cliente1_idx` (`Cliente_cuit`),
   CONSTRAINT `fk_Venta_Cliente1` FOREIGN KEY (`Cliente_cuit`) REFERENCES `cliente` (`cuit`),
-  CONSTRAINT `fk_Venta_Punto de Venta1` FOREIGN KEY (`Punto de Venta_idPDV`) REFERENCES `ptodevta` (`idPDV`)
+  CONSTRAINT `fk_Venta_Punto de Venta1` FOREIGN KEY (`Punto_de_Venta_idPDV`) REFERENCES `ptodevta` (`idPDV`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -42,6 +42,7 @@ CREATE TABLE `venta` (
 
 LOCK TABLES `venta` WRITE;
 /*!40000 ALTER TABLE `venta` DISABLE KEYS */;
+INSERT INTO `venta` VALUES (202201291,'20220129',28586.25,25,'30000000007');
 /*!40000 ALTER TABLE `venta` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-18 21:54:41
+-- Dump completed on 2022-01-29 16:03:57

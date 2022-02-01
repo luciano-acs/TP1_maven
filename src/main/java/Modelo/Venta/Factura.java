@@ -14,6 +14,10 @@ public class Factura {
         this.venta = venta;
     }
 
+    public Factura() {
+        
+    }
+
     public Venta getVenta() {
         return venta;
     }

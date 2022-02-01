@@ -6,12 +6,14 @@ public class Cliente {
     private String cuit;
     private String domicilio;
     private String condicion;
-
-    public Cliente(String razonSocial, String cuit, String domicilio, String condicion) {
+    private String email;
+    
+    public Cliente(String razonSocial, String cuit, String domicilio, String condicion, String email) {
         this.razonSocial = razonSocial;
         this.cuit = cuit;
         this.domicilio = domicilio;
         this.condicion = condicion;
+        this.email = email;
     }
 
     public Cliente() {
@@ -49,11 +51,18 @@ public class Cliente {
     public void setDomicilio(String domicilio) {
         this.domicilio = domicilio;
     }
-
+    
     @Override
     public String toString() {
         return "Cliente{" + "razonSocial=" + razonSocial + ", cuit=" + cuit + ", domicilio=" + domicilio + ", condicion=" + condicion + '}';
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
     
 }

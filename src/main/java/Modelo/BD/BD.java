@@ -1,7 +1,9 @@
 package Modelo.BD;
 
 import Modelo.Cliente.Cliente;
+import Modelo.Organizacion.Afip;
 import Modelo.Organizacion.Empleado;
+import Modelo.Producto.Auxiliar;
 import Modelo.Producto.ColorP;
 import Modelo.Producto.Marca;
 import Modelo.Producto.Producto;
@@ -9,7 +11,10 @@ import Modelo.Producto.Rubro;
 import Modelo.Producto.Stock;
 import Modelo.Producto.Talle;
 import Modelo.Producto.TipoDeTalle;
+import Modelo.Venta.Factura;
 import Modelo.Venta.FormaDePago;
+import Modelo.Venta.LineaDeVenta;
+import Modelo.Venta.Pago;
 import Modelo.Venta.Venta;
 
 import java.sql.Connection;
@@ -81,6 +86,7 @@ public class BD {
           ResultSet r = s.executeQuery(sql);
                   
           while(r.next()){
+              Stock st = buscarStock(r.getString("a.codProducto"));
               Marca marca = new Marca(r.getInt("idMarca"),r.getString("Marca")); 
               Rubro rubro = new Rubro(r.getInt("idRubro"),r.getString("Rubro"));              
               p.setCodigo(r.getInt("codProducto"));
@@ -90,6 +96,7 @@ public class BD {
               p.setMargenGanancia(r.getDouble("margenGanancia"));              
               p.setMarca(marca);
               p.setRubro(rubro);
+              p.setStock(st);
           }          
         } catch(Exception e){
             e.printStackTrace();
@@ -303,23 +310,57 @@ public class BD {
         } 
     }
 
-//    public int ultimoCod() {
-//        int cod = 0;
-//        try {
-//          Connection c = getConnection();
-//          Statement s = c.createStatement();
-//          String sql = "select max(idStock) from stock";
-//          ResultSet r = s.executeQuery(sql);
-//                  
-//          while(r.next()){
-//              cod = r.getInt("max(idStock)");
-//          }          
-//        } catch(Exception e){
-//            e.printStackTrace();
-//        }
-//        return cod+1;
-//    }
-
+    public int ultimoCod() {
+        int cod = 0;
+        try {
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select max(idVenta) from venta";
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              cod = r.getInt("max(idVenta)");
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return cod+1;
+    }
+    
+    public int ultimoCodMarca() {
+        int cod = 0;
+        try {
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select max(idMarca) from marca";
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              cod = r.getInt("max(idMarca)");
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return cod+1;
+    }
+    
+    public int ultimoCodColor() {
+        int cod = 0;
+        try {
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select max(idColor) from color";
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              cod = r.getInt("max(idColor)");
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return cod+1;
+    }
+    
     public Producto listarProducto(int codigo) {
         Producto p = new Producto();
         try {
@@ -347,9 +388,7 @@ public class BD {
             e.printStackTrace();
         }
         return p;
-    }
-    
-    
+    }    
 
     public ArrayList<FormaDePago> listarFormas() {
         ArrayList<FormaDePago> formas = new ArrayList<FormaDePago>();
@@ -422,6 +461,7 @@ public class BD {
         }
        return descripcion;
     }
+    
     public String buscarDTalle(int talle) {
         String descripcion = "";
         try {
@@ -438,6 +478,7 @@ public class BD {
         }
        return descripcion;
     }
+    
     public void modificarProducto(Producto p, Marca m, Rubro ru) {
         try{
             String cadena1 = "update producto set descripcion='%2', costo=%3, margenGanancia=%4, porcIVA=%5, Marca_idMarca=%6, Rubro_idRubro=%7 where codProducto = %1"
@@ -461,7 +502,7 @@ public class BD {
         try {
           Connection c = getConnection();
           Statement s = c.createStatement();
-          String sql = "select a.cuit, a.razonSocial, a.domicilio, a.email, a.cond_tributaria from cliente as a where a.cuit=%1"
+          String sql = "select a.cuit, a.razonSocial, a.domicilio, a.email, a.cond_tributaria from cliente as a where a.cuit='%1'"
                         .replace("%1",""+cuit);
           ResultSet r = s.executeQuery(sql);
                   
@@ -496,19 +537,16 @@ public class BD {
 
     public void agregarStock(int cod, Talle t, ColorP co, int cantidadS) {
         try{
-            String cadena1 = "insert into stock_has_talle values (%1,%2,%3)"
-            .replace("%1",""+cod)
-            .replace("%2",""+t.getIdTalle())
-            .replace("%3",""+cantidadS);
-            
-            String cadena2 = "insert into color_has_stock values (%1,%2,%3)"
-           .replace("%1",""+cod) 
-           .replace("%2",""+co.getIdColor())
-           .replace("%3",""+cantidadS);
+            String cadena1="";
+            String cadena2="";
+            cadena1 = "insert into color_has_talle values (%1,%2,%3,%4)"
+                                .replace("%1",""+co.getIdColor()) 
+                                .replace("%2",""+t.getIdTalle())
+                                .replace("%3",""+cantidadS)
+                                .replace("%4",""+cod);          
             
             Connection c = getConnection();
-            c.createStatement().executeUpdate(cadena1);    
-            c.createStatement().executeUpdate(cadena2);
+            c.createStatement().executeUpdate(cadena1); 
         }
         catch(Exception e){
             e.printStackTrace();
@@ -532,11 +570,11 @@ public class BD {
         try {
           Connection c = getConnection();
           Statement s = c.createStatement();
-          String sql = "select DISTINCT a.idColor, a.descripcion, d.cantidad from color as a, producto as b, stock as c, color_has_stock as d \n" +
+          String sql = "select DISTINCT a.idColor, a.descripcion from color as a, producto as b, stock as c, color_has_talle as d \n" +
                         "where b.Stock_idStock = c.idStock and\n" +
                         "c.idStock = d.Stock_idStock and\n" +
                         "d.Color_idColor = a.idColor and\n" +
-                        "b.codProducto = %1 and d.cantidad > 0".replace("%1",""+cod);
+                        "b.codProducto = %1".replace("%1",""+cod);
           ResultSet r = s.executeQuery(sql);
                   
           while(r.next()){
@@ -554,7 +592,7 @@ public class BD {
         try {
           Connection c = getConnection();
           Statement s = c.createStatement();
-          String sql = "select DISTINCT e.idTipoTalle, e.descripcion from talle as a, producto as b, stock as c, stock_has_talle as d, tipodetalle as e \n" +
+          String sql = "select DISTINCT e.idTipoTalle, e.descripcion from talle as a, producto as b, stock as c, color_has_talle as d, tipodetalle as e \n" +
                         "where b.Stock_idStock = c.idStock and\n" +
                         "c.idStock = d.Stock_idStock and\n" +
                         "d.Talle_idTalle = a.idTalle and\n" +
@@ -577,18 +615,18 @@ public class BD {
         try {
           Connection c = getConnection();
           Statement s = c.createStatement();
-          String sql = "select DISTINCT a.idTalle, a.descripcion, d.cantidad from talle as a, producto as b, stock as c, stock_has_talle as d, tipodetalle as e \n" +
-                        "where b.Stock_idStock = c.idStock and\n" +
-                        "c.idStock = d.Stock_idStock and\n" +
-                        "d.Talle_idTalle = a.idTalle and\n" +
-                        "a.Tipodetalle_idTipoTalle = e.idTipoTalle and\n" +
-                        "b.codProducto = %1 and e.descripcion = '%2' and d.cantidad > 0"
+          String sql = "select distinct a.idTalle, a.descripcion from talle as a, producto as b, stock as c, color_has_talle as d, tipodetalle as e\n" +
+                        "where b.codProducto = c.idStock\n" +
+                        "and c.idStock = d.Stock_idStock\n" +
+                        "and d.Talle_idTalle = a.idTalle\n" +
+                        "and a.Tipodetalle_idTipoTalle = e.idTipoTalle\n" +
+                        "and e.idTipoTalle = %1 and b.codProducto = %2"
                         .replace("%1",""+cod)
                         .replace("%2",tipo);
           ResultSet r = s.executeQuery(sql);
                   
           while(r.next()){
-              Talle t = new Talle(r.getInt("idTalle"),r.getString("descripcion"));
+              Talle t = new Talle(r.getInt("a.idTalle"),r.getString("a.descripcion"));
               talles.add(t);
           }          
         } catch(Exception e){
@@ -599,7 +637,7 @@ public class BD {
 
     public void registrarVenta(Venta v, int pto) {
         try{
-            String cadena1 = "insert into venta values (%1,STR_TO_DATE(REPLACE('%2','/','.') ,GET_FORMAT(date,'EUR')),%3,%4,%5)"
+            String cadena1 = "insert into venta values (%1,%2,%3,%4,%5)"
             .replace("%1",""+v.getNroComprobante())
             .replace("%2",v.getFecha())
             .replace("%3",""+v.getTotal())
@@ -614,38 +652,64 @@ public class BD {
         }
     }
 
-    public void actualizarStock(int codigo, int cantidad, int id, Talle t, ColorP co) {
+    public void actualizarStock(int codigo, int cantidad, int id, Talle t, ColorP co, double subtotal) {
         try{
             String cadena1 = "update stock as a INNER JOIN producto as b set a.cantidad = a.cantidad - %1 where a.idStock = b.Stock_idStock and b.codProducto = %2"
             .replace("%1",""+cantidad)
             .replace("%2",""+codigo);             
                 
-            String cadena2 = "update stock_has_talle as a INNER JOIN talle as b, producto as c, stock as d set a.cantidad = a.cantidad - %1 where a.Stock_idStock = d.idStock and d.idStock = c.Stock_idStock and a.Talle_idTalle = b.idTalle and c.codProducto = %2 and b.idTalle = %3"
+            String cadena2 = "update color_has_talle as a INNER JOIN talle as b, producto as c, stock as d, color as e set a.cantidad = a.cantidad - %1 where a.Stock_idStock = d.idStock and d.idStock = c.Stock_idStock and a.Talle_idTalle = b.idTalle and a.Color_idColor = e.idColor and c.codProducto = %2 and b.idTalle = %3 and e.idColor=%4"
                               .replace("%1",""+cantidad)
                               .replace("%2",""+codigo)
-                              .replace("%3",""+t.getIdTalle());
-            
-            String cadena3 = "update color_has_stock as a INNER JOIN color as b, producto as c, stock as d set a.cantidad = a.cantidad - %1 where a.Stock_idStock = d.idStock and d.idStock = c.Stock_idStock and a.Color_idColor = b.idColor and c.codProducto = %2 and b.idColor = %3"
-                             .replace("%1",""+cantidad)
-                             .replace("%2",""+codigo)
-                             .replace("%3",""+co.getIdColor());
+                              .replace("%3",""+t.getIdTalle())
+                              .replace("%4",""+co.getIdColor());
                 
-            String cadena4 = "insert into lineadeventa values (null,%2,%3,%4)"
+            String cadena3 = "insert into lineadeventa values (null,%2,%3,%4,%5)"
             .replace("%2",""+cantidad)
             .replace("%3",""+id)
-            .replace("%4",""+codigo);
+            .replace("%4",""+codigo)
+            .replace("%5",""+subtotal);
                 
             Connection c = getConnection();
             c.createStatement().executeUpdate(cadena1);   
             c.createStatement().executeUpdate(cadena2); 
-            c.createStatement().executeUpdate(cadena3);   
-            c.createStatement().executeUpdate(cadena4);                        
+            c.createStatement().executeUpdate(cadena3);                       
         }
         catch(Exception e){
             e.printStackTrace();
         } 
     }
 
+    public void actualizarStockG(int codigo, int cantidad, Talle t, ColorP co) {
+        try{
+            String cadena2 = "";
+            String cadena1 = "update stock as a INNER JOIN producto as b set a.cantidad = a.cantidad + %1 where a.idStock = b.Stock_idStock and b.codProducto = %2"
+            .replace("%1",""+cantidad)
+            .replace("%2",""+codigo);             
+            
+            if(existeColorTalle(codigo, co.getIdColor(),t.getIdTalle())){
+                cadena2 = "update color_has_talle inner join producto, color, talle, stock set color_has_talle.cantidad = color_has_talle.cantidad + %1 where producto.codProducto = stock.idStock and stock.idStock = color_has_talle.Stock_idStock and color_has_talle.Color_idColor = %4 and color_has_talle.Talle_idTalle = %3 and producto.codProducto=%2"
+                              .replace("%1",""+cantidad)
+                              .replace("%2",""+codigo)
+                              .replace("%3",""+t.getIdTalle())
+                              .replace("%4",""+co.getIdColor());
+            }else{
+                cadena2 = "insert into color_has_talle values(%1,%2,%3,%4)"
+                        .replace("%1",""+co.getIdColor())
+                        .replace("%2",""+t.getIdTalle())
+                        .replace("%3",""+cantidad)
+                        .replace("%4",""+codigo);                        
+            }            
+                
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1);   
+            c.createStatement().executeUpdate(cadena2);                       
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        } 
+    }
+    
     public int consultarStock(String codigo) {
         int cantidad = 0;
         try {
@@ -663,7 +727,7 @@ public class BD {
         }
         return cantidad;
     }
-
+    
     public boolean existe(String codigo) {
         boolean existe = false;
         try {
@@ -683,6 +747,34 @@ public class BD {
         }
         return existe;
     }
+    
+    public boolean existeColorTalle(int codigo, int color, int talle) {
+        boolean existe = false;
+        try {
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select count(a.codProducto) from Producto as a, Color as b, Color_has_talle as c, stock as d, talle as e\n" +
+                        "where a.codProducto = d.idStock\n" +
+                        "and d.idStock = c.Stock_idStock\n" +
+                        "and b.idColor = c.Color_idColor\n" +
+                        "and e.idTalle = c.Talle_idTalle\n" +
+                        "and a.codProducto = %1 and b.idColor = %2 and e.idTalle = %3"
+                        .replace("%1",""+codigo)
+                        .replace("%2",""+color)
+                        .replace("%3",""+talle);
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              if(r.getInt("count(a.codProducto)")==1){
+                  existe = true;
+              }
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return existe;
+    }
+    
     
     public Empleado existeEmpleado(String user, String contraseña) {
         Empleado emp = new Empleado();
@@ -718,7 +810,7 @@ public class BD {
         try {
           Connection c = getConnection();
           Statement s = c.createStatement();
-          String sql = "select a.idTalle, a.descripcion, d.cantidad from talle as a, producto as b, stock as c, stock_has_talle as d \n" +
+          String sql = "select a.idTalle, a.descripcion, d.cantidad from talle as a, producto as b, stock as c, color_has_talle as d \n" +
                         "where b.Stock_idStock = c.idStock and\n" +
                         "c.idStock = d.Stock_idStock and\n" +
                         "d.Talle_idTalle = a.idTalle and b.codProducto = %1 and a.idTalle = %2"
@@ -740,7 +832,7 @@ public class BD {
         try {
           Connection c = getConnection();
           Statement s = c.createStatement();
-          String sql = "select a.idColor, a.descripcion, d.cantidad from color as a, producto as b, stock as c, color_has_stock as d \n" +
+          String sql = "select a.idColor, a.descripcion, d.cantidad from color as a, producto as b, stock as c, color_has_talle as d \n" +
                         "where b.Stock_idStock = c.idStock and\n" +
                         "c.idStock = d.Stock_idStock and\n" +
                         "d.Color_idColor = a.idColor and\n" +
@@ -764,26 +856,363 @@ public class BD {
             .replace("%1",""+cant)
             .replace("%2",""+codigo);             
                 
-            String cadena2 = "update stock_has_talle as a INNER JOIN talle as b, producto as c, stock as d set a.cantidad = a.cantidad + %1 where a.Stock_idStock = d.idStock and d.idStock = c.Stock_idStock and a.Talle_idTalle = b.idTalle and c.codProducto = %2 and b.idTalle = %3"
+            String cadena2 = "update color_has_talle as a INNER JOIN talle as b, producto as c, stock as d, color as e set a.cantidad = a.cantidad + %1 where a.Stock_idStock = d.idStock and d.idStock = c.Stock_idStock and a.Talle_idTalle = b.idTalle and a.Color_idColor = e.idColor and c.codProducto = %2 and b.idTalle = %3 and e.idColor=%4"
                               .replace("%1",""+cant)
                               .replace("%2",""+codigo)
-                              .replace("%3",""+t.getIdTalle());
+                              .replace("%3",""+t.getIdTalle())
+                              .replace("%4",""+co.getIdColor());
             
-            String cadena3 = "update color_has_stock as a INNER JOIN color as b, producto as c, stock as d set a.cantidad = a.cantidad + %1 where a.Stock_idStock = d.idStock and d.idStock = c.Stock_idStock and a.Color_idColor = b.idColor and c.codProducto = %2 and b.idColor = %3"
-                             .replace("%1",""+cant)
-                             .replace("%2",""+codigo)
-                             .replace("%3",""+co.getIdColor());
-            
-            String cadena4 = "delete from lineadeventa where Venta_idVenta = %1".replace("%1",""+linea);
+            String cadena3 = "delete from lineadeventa where Venta_idVenta = %1".replace("%1",""+linea);
             
             Connection c = getConnection();
             c.createStatement().executeUpdate(cadena1);   
             c.createStatement().executeUpdate(cadena2); 
-            c.createStatement().executeUpdate(cadena3);    
-            c.createStatement().executeUpdate(cadena4);
+            c.createStatement().executeUpdate(cadena3);
         }
         catch(Exception e){
             e.printStackTrace();
         }
     }
+
+    public void registrarFactura(Factura fact) {
+        try{
+            String cadena1 = "insert into factura values (%1,'%2',%3,%4)"
+            .replace("%1",""+fact.getNumFact())
+            .replace("%2",fact.getFecha())
+            .replace("%3",""+fact.getTotal())
+            .replace("%4",""+fact.getVenta().getNroComprobante());
+           
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1);    
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public FormaDePago buscarFormaPago(String descripcion) {
+        FormaDePago fdp = new FormaDePago();
+        int cod = 0;
+        try {
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select idForma, descripcion from formadepago where descripcion='%1'".replace("%1", descripcion);
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              fdp.setIdForma(r.getInt("idForma"));
+              fdp.setDescripcion(descripcion);
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return fdp;
+    }
+
+    public void registrarPago(Pago pago) {
+        try{
+            String cadena1 = "insert into pago values (%1,%2,%3,%4)"
+            .replace("%1",""+pago.getIdPago())
+            .replace("%2",""+pago.getPago())
+            .replace("%3",""+pago.getFdp().getIdForma())
+            .replace("%4",""+pago.getVenta().getNroComprobante());
+           
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1);    
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public Venta buscarVenta(int id) {
+        Venta venta = new Venta();
+        int cod = 0;
+        try {
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select idVenta, fecha, total, Punto_de_Venta_idPDV, Cliente_cuit from venta where idVenta=%1".replace("%1",""+id);
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              Cliente cl = buscarCliente(r.getString("Cliente_cuit"));
+              venta.setCliente(cl);
+              venta.setFecha(r.getString("fecha"));
+              venta.setNroComprobante(Integer.parseInt(""+id));
+              venta.setTotal(r.getDouble("total"));
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return venta;
+    }
+
+    public ArrayList<Cliente> listarClientes() {
+        ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+        try {
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select * from cliente";
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              Cliente cl = new Cliente();
+              cl.setCuit(r.getString("cuit"));
+              cl.setCondicion(r.getString("cond_Tributaria"));
+              cl.setDomicilio(r.getString("domicilio"));
+              cl.setEmail(r.getString("email"));
+              cl.setRazonSocial(r.getString("razonSocial"));
+              
+              clientes.add(cl);
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return clientes;
+    }
+
+    public void registrarCliente(Cliente cl) {
+        try{
+            String cadena1 = "insert into cliente values ('%1','%2','%3','%4','%5')"
+            .replace("%1",cl.getCuit())
+            .replace("%2",cl.getRazonSocial())
+            .replace("%3",cl.getDomicilio())
+            .replace("%4",cl.getEmail())
+            .replace("%5",cl.getCondicion());
+           
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1);    
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarColor(ColorP color) {
+        try{
+            String cadena1 = "insert into color values (%1,'%2')"
+            .replace("%1",""+color.getIdColor())
+            .replace("%2",color.getDescripcion());
+           
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1);    
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarMarca(Marca marca) {
+        try{
+            String cadena1 = "insert into marca values (%1,'%2')"
+            .replace("%1",""+marca.getCodMarca())
+            .replace("%2",marca.getDescripcionM());
+           
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1);    
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Auxiliar> listarCaracteristicas(String codigo) {
+        ArrayList<Auxiliar> caracteristicas = new ArrayList<Auxiliar>();
+        try {
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select a.codProducto, b.descripcion, c.descripcion, d.cantidad from producto as a, color as b, talle as c, color_has_talle as d, stock as f\n" +
+                        "where  a.codProducto = f.idStock\n" +
+                        "and f.idStock = d.Stock_idStock\n" +
+                        "and b.idColor = d.Color_idColor \n" +
+                        "and c.idTalle = d.Talle_idTalle\n" +
+                        "and a.codProducto = '%1'".replace("%1",""+codigo);
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              Auxiliar aux = new Auxiliar();
+              aux.setCantidad(r.getString("d.cantidad"));
+              aux.setColor(r.getString("b.descripcion"));
+              aux.setTalle(r.getString("c.descripcion"));
+              Object[] agregar = {};              
+              caracteristicas.add(aux);
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return caracteristicas;
+    }
+
+    public int consultarStockParticular(String codigo, int color, int talle) {
+        int existencia = 0;
+        try {
+          Connection c = getConnection();
+          Statement s = c.createStatement();
+          String sql = "select a.codProducto, b.descripcion, c.descripcion, d.cantidad from producto as a, color as b, talle as c, color_has_talle as d, stock as f\n" +
+                        "where  a.codProducto = f.idStock\n" +
+                        "and f.idStock = d.Stock_idStock\n" +
+                        "and b.idColor = d.Color_idColor\n" +
+                        "and c.idTalle = d.Talle_idTalle\n" +
+                        "and a.codProducto = '%1' and b.idColor = %2 and c.idTalle = %3"
+                        .replace("%1",""+codigo)
+                        .replace("%2",""+color)
+                        .replace("%3",""+talle);
+          ResultSet r = s.executeQuery(sql);
+                  
+          while(r.next()){
+              existencia = r.getInt("d.cantidad");
+          }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return existencia;
+    }
+
+    public ArrayList<Venta> busquedaVenta(long cuit, String tipo, int codigo) {
+        ArrayList<Venta> ventas = new ArrayList<Venta>();
+        try {
+            Connection c = getConnection();
+            Statement s = c.createStatement();
+            String sql = "select a.idVenta, a.fecha, a.total, b.numFactura, c.cuit, c.razonSocial, c.domicilio, c.email, c.cond_tributaria from venta as a, factura as b, cliente as c\n" +
+                        "where a.idVenta = b.Venta_idVenta\n" +
+                        "and a.Cliente_cuit = c.cuit\n" +
+                        "and c.cuit = %1 and %2 = %3"
+                        .replace("%1",""+cuit)
+                        .replace("%2",tipo)
+                        .replace("%3",""+codigo);
+            ResultSet r = s.executeQuery(sql);
+                  
+            while(r.next()){
+                Cliente cl = new Cliente();
+                cl.setCuit(r.getString("c.cuit"));
+                cl.setCondicion(r.getString("c.cond_tributaria"));
+                cl.setDomicilio(r.getString("c.domicilio"));
+                cl.setEmail(r.getString("c.email"));
+                cl.setRazonSocial(r.getString("c.razonSocial"));
+              
+                Venta v = new Venta();
+                v.setCliente(cl);
+                v.setFecha(r.getString("a.fecha"));
+                v.setNroComprobante(r.getInt("a.idventa"));
+                v.setTotal(r.getDouble("a.total"));
+              
+                ArrayList<LineaDeVenta> li = busquedaLineaDeVenta(r.getInt("a.idVenta")); 
+                v.setLista(li);
+
+                ventas.add(v);
+            }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return ventas;
+    }
+
+    public ArrayList<LineaDeVenta> busquedaLineaDeVenta(int idVenta) {
+        ArrayList<LineaDeVenta> lineas = new ArrayList<LineaDeVenta>();
+        try {
+            Connection c = getConnection();
+            Statement s = c.createStatement();
+            String sql = "select a.idLinea, b.descripcion, b.codProducto, a.cantidad, a.subtotal from lineadeventa as a, producto as b, venta as c\n" +
+                          "where c.idVenta = a.Venta_idVenta\n" +
+                          "and a.Producto_codProducto = b.codProducto\n" +
+                          "and c.idVenta = %1"
+                        .replace("%1",""+idVenta);
+            ResultSet r = s.executeQuery(sql);
+                  
+            while(r.next()){
+                Producto p = buscarProducto(r.getString("b.codProducto"));                 
+                LineaDeVenta li = new LineaDeVenta();
+                li.setCantidad(r.getInt("a.cantidad"));
+                li.setProducto(p);
+                li.setSubtotal(r.getDouble("a.subtotal"));
+                lineas.add(li);
+            }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return lineas;
+    }
+
+    private Stock buscarStock(String idStock) {
+        Stock st = new Stock();
+        try {
+            Connection c = getConnection();
+            Statement s = c.createStatement();
+            String sql = "select a.idStock, a.cantidad from stock as a where idStock = %1"
+                        .replace("%1",""+idStock);
+            ResultSet r = s.executeQuery(sql);
+                  
+            while(r.next()){
+                st.setId(r.getInt("a.idStock"));
+                st.setCantidad(r.getInt("a.cantidad"));
+            }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return st;
+    }
+
+    public Afip buscarFacturaAfip(int numero) {
+        Afip afip = new Afip();
+        try {
+            Connection c = getConnection();
+            Statement s = c.createStatement();
+            String sql = "select a.idAfip, a.CAE, a.fechaVtoCAE, a.condicion from afip as a INNER JOIN factura as b\n" +
+                         "where a.idAfip = b.Afip_idAfip\n" +
+                         "and b.numFactura = %1"
+                        .replace("%1",""+numero);
+            ResultSet r = s.executeQuery(sql);
+                  
+            while(r.next()){
+                afip.setCAE(r.getString("a.CAE"));
+                afip.setIdafip(r.getInt("a.idAfip"));
+                afip.setVtoCAE(r.getString("a.fechaVtoCAE"));
+                afip.setCondicion(r.getString("a.condicion"));
+            }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return afip;
+    }
+
+    public Factura buscarFactura(int idVenta) {
+        Factura fact = new Factura();
+        try {
+            Connection c = getConnection();
+            Statement s = c.createStatement();
+            String sql = "select a.numFactura, a.fecha, a.total, a.Venta_idVenta, a.Afip_idAfip from factura as a INNER JOIN venta as b \n" +
+                         "where a.Venta_idVenta = b.idVenta\n" +
+                         "and  a.Venta_idVenta = %1"
+                        .replace("%1",""+idVenta);
+            ResultSet r = s.executeQuery(sql);
+                  
+            while(r.next()){
+                fact.setNumFact(r.getInt("a.numFactura"));
+                fact.setFecha(r.getString("a.fecha"));
+                fact.setTotal(r.getDouble("a.total"));
+                fact.setVenta(buscarVenta(idVenta));
+            }          
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return fact;
+    }
+
+    public void registarFacturaAfip(int numFact, String cae, String caeFchVto, String condicion) {
+        try{
+            String cadena1 = "insert into afip values (%1,'%2','%3','%4')"
+                                .replace("%1",""+numFact) 
+                                .replace("%2",cae)
+                                .replace("%3",caeFchVto)
+                                .replace("%4",condicion);          
+            
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1); 
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    
 }

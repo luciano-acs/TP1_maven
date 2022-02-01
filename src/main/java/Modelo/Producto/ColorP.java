@@ -10,6 +10,10 @@ public class ColorP {
         this.descripcion = descripcion;
     }
 
+    public ColorP() {
+        
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
