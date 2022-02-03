@@ -73,6 +73,7 @@ public class pVentas extends javax.swing.JPanel {
         btnRegistarVenta = new javax.swing.JButton();
         btnCancelarVenta = new javax.swing.JButton();
         btnFinalizarVenta = new javax.swing.JButton();
+        jlSaldo = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(700, 700));
 
@@ -334,6 +335,10 @@ public class pVentas extends javax.swing.JPanel {
                                 .addComponent(btnCancelarVenta))
                             .addComponent(btnRegistarVenta, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jlSaldo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,7 +422,9 @@ public class pVentas extends javax.swing.JPanel {
                     .addComponent(jtfVto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13)
                     .addComponent(jtfCVV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jlSaldo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelarVenta)
                     .addComponent(btnFinalizarVenta))
@@ -493,6 +500,7 @@ public class pVentas extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
+    public javax.swing.JLabel jlSaldo;
     public javax.swing.JLabel jlTotal;
     public javax.swing.JTable jtLinea;
     public javax.swing.JTextField jtfCUIT;

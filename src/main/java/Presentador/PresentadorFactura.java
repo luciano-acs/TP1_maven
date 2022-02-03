@@ -95,6 +95,7 @@ public class PresentadorFactura implements ActionListener, Printable{
     PresentadorFactura(pFacturas factura, ArrayList<Venta> ve, Afip afip, Factura fact) {
         factura.btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/imprimir-contorno-del-boton.png")));
         factura.btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cerrar-sesion.png")));
+        
         double sneto = 0;
         String tipoFact = "";
         this.factura = factura;
@@ -131,7 +132,7 @@ public class PresentadorFactura implements ActionListener, Printable{
         factura.jlVtoCAE.setText(afip.getVtoCAE());
         
         DefaultTableModel datos = (DefaultTableModel) factura.jtLinea.getModel();        
-        
+        datos.setNumRows(0);
         for(int i=0;i<ve.get(0).getLista().size();i++){
             double precio = p.calcularPrecio(ve.get(0).getLista().get(i).getProducto().getCosto(),
                                              ve.get(0).getLista().get(i).getProducto().getPorcIVA(),
@@ -151,8 +152,8 @@ public class PresentadorFactura implements ActionListener, Printable{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(factura.btnSalir)){
-            factura.dispose();
             limpiar();
+            factura.dispose();
         }
         if(e.getSource().equals(factura.btnImprimir)){
             PrinterJob gap = PrinterJob.getPrinterJob();
@@ -165,7 +166,10 @@ public class PresentadorFactura implements ActionListener, Printable{
                     JOptionPane.showMessageDialog(null,"No se pudo imprimir");
                 }
             }
+            limpiar();
+            factura.dispose();
         }
+        e.setSource("");
     }
     
     public void limpiar(){

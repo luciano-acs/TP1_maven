@@ -49,6 +49,7 @@ public class PresentadorInicio implements ActionListener{
         if(e.getSource()==iniciar.btnSalir){
             exit(0);
         }
+        e.setSource("");
     }
     
 }

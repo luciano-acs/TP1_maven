@@ -1,18 +1,12 @@
 package Presentador;
 
 import Modelo.BD.BD;
-import Modelo.Producto.Auxiliar;
-import Modelo.Producto.ColorP;
-import Modelo.Producto.Marca;
-import Modelo.Producto.Producto;
-import Modelo.Producto.Rubro;
-import Modelo.Producto.Stock;
-import Modelo.Producto.Talle;
-import Modelo.Producto.TipoDeTalle;
+import Modelo.Producto.*;
 import Vista.pListarProductos;
 import Vista.pModProductos;
 import Vista.pProductos;
 import Vista.pgestiones;
+import Vista.vistaMenu;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,16 +14,6 @@ import java.awt.event.ItemEvent;
 import static java.awt.event.ItemEvent.SELECTED;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
 import static java.lang.String.valueOf;
 import static java.lang.System.out;
 import java.util.ArrayList;
@@ -48,7 +32,7 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
     Producto producto = new Producto();
     pModProductos modProductos = new pModProductos();
     pgestiones gestionar = new pgestiones();
-    
+    vistaMenu menu = new vistaMenu();
     Color verdeClaro = new Color(31,192,132);
     Color verdeOscuro = new Color(12,72,56);
     BD bd = new BD();
@@ -59,21 +43,48 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         listaProd.btnBuscarP.addActionListener(this);
         listaProd.jtfBuscar.addActionListener(this);
         listaProd.btnEliminar.addActionListener(this);
+        
+        listaProd.jLabel3.setText("");
+        listaProd.jtfBuscar.setText("");
+        
     }    
     
     public PresentadorProductos(pProductos prod){
         this.productos = prod; 
         productos.cbTipo.addItemListener(this);
         productos.btnAgregarProd.addActionListener(this);
+        productos.btnAgregarProdSolo.addActionListener(this);
         productos.btnConfirmar.addActionListener(this);
         productos.btnEliminar.addActionListener(this);
+        
+        productos.jtfCantidad.setText("");
+        productos.jtfCantidadS.setText("");
+        productos.jtfCosto.setText("");
+        productos.jtfDescripcion.setText("");
+        productos.jtfIVA.setText("");
+        productos.jtfMargen.setText("");
+        productos.jtfNombre.setText("");
     }
 
-    public PresentadorProductos(pModProductos mod) {
+    public PresentadorProductos(pModProductos mod, vistaMenu menu) {
+        System.out.println("INGRESO AL PRESENTADOR MOD PRODUCTOS");
+            
         this.modProductos = mod;
         modProductos.cbTipo.addItemListener(this);
         modProductos.btnBuscarP.addActionListener(this);
         modProductos.btnModProd.addActionListener(this);
+        
+        modProductos.cbColor.removeAllItems();
+        modProductos.cbMarca.removeAllItems();
+        modProductos.cbRubro.removeAllItems();
+        modProductos.cbTalle.removeAllItems();
+        modProductos.cbTipo.removeAllItems();
+        modProductos.jtfCantidad.setText("");
+        modProductos.jtfCosto.setText("");
+        modProductos.jtfDescripcion.setText("");
+        modProductos.jtfIVA.setText("");
+        modProductos.jtfMargen.setText("");
+        modProductos.jtfNombre.setText("");
     }
     
     public PresentadorProductos(pgestiones gestion){
@@ -84,10 +95,24 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         gestionar.btnAgregarColor.addActionListener(this);
         gestionar.btnAgregarMarca.addActionListener(this);
         gestionar.btnAgregarCantidad.addActionListener(this);
+        
+        gestionar.jtfCantidad.setText("");
+        gestionar.jtfDescripcion.setText("");
+        gestionar.jtfMarca.setText("");
+        gestionar.jtfNombre.setText("");
+        gestionar.jtfNuvoColor.setText("");
+        gestionar.jtfNvaMarca.setText("");
+        
+        DefaultTableModel datos = (DefaultTableModel) gestionar.jtCaracteristicas.getModel();
+        for(int i = 0;i<gestionar.jtCaracteristicas.getRowCount();i++){
+            datos.removeRow(i);
+            i-=1;
+        }
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
+        
         if(e.getSource().equals(listaProd.btnBuscarP)){
             buscarProductoTabla();
         }
@@ -97,120 +122,155 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         }
         if(e.getSource().equals(productos.btnAgregarProdSolo)){
             agregarProductoSolo();
-            borrarjtf();        
         }
         if(e.getSource().equals(productos.btnAgregarProd)){
             agregarProducto();
-            borrarjtf();
         }
         if(e.getSource().equals(modProductos.btnBuscarP)){
-            rellenarCampos();
+            if(modProductos.jtfNombre.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null,"Indique el producto a modificar");
+            }else{
+                rellenarCampos();
+            }
         }
-        if(e.getSource().equals(modProductos.btnModProd)){
-            modProducto();            
+        if(e.getSource().equals(modProductos.btnModProd)){            
+            System.out.println("entro a modificar producto");
+            modProducto(); 
         }
         if(e.getSource().equals(productos.btnConfirmar)){
-            int cantidad = parseInt(productos.jtfCantidad.getText());
+            if(!productos.jtfCantidad.getText().isEmpty()){
+                int cantidad = parseInt(productos.jtfCantidad.getText());
             
-            String ttalle = (String) productos.cbTipo.getSelectedItem();
-            String talle = (String) productos.cbTalle.getSelectedItem();
-            String colorr = (String) productos.cbColor.getSelectedItem();
-            int cantidadS = parseInt(productos.jtfCantidadS.getText());            
-            
-            suma = suma + cantidadS;
-            if(suma > cantidad){
-                out.println(suma);
-                if((suma-cantidadS)==0){suma=0;}
-                else{suma=suma-cantidadS;}
-                showMessageDialog(null, "La cantidad superó el total indicado");
-                out.println(suma);
+                String ttalle = productos.cbTipo.getSelectedItem().toString();
+                String talle = productos.cbTalle.getSelectedItem().toString();
+                String colorr = productos.cbColor.getSelectedItem().toString();
+                int cantidadS = Integer.parseInt(productos.jtfCantidadS.getText());
+                
+                suma = suma + cantidadS;
+                if(suma > cantidad){
+                    if((suma-cantidadS)==0){suma=0;}
+                    else{suma=suma-cantidadS;}
+                    JOptionPane.showMessageDialog(null, "La cantidad superó el total indicado");
+                    out.println(suma);
+                }else{
+                    DefaultTableModel datos = (DefaultTableModel) productos.jtStock.getModel();
+                    Object[] fila = {ttalle,talle,colorr,cantidadS};
+                    datos.addRow(fila);
+                } 
             }else{
-                DefaultTableModel datos = (DefaultTableModel) productos.jtStock.getModel();        
-                Object[] fila = {ttalle,talle,colorr,cantidadS};                
-                datos.addRow(fila);                
-            }          
+                JOptionPane.showMessageDialog(null,"Indique cantida a agregar");
+            }       
         }
         if(e.getSource().equals(productos.btnEliminar)){
             DefaultTableModel datos = (DefaultTableModel) productos.jtStock.getModel();            
             int fila = productos.jtStock.getSelectedRow();
-            int disminuir = (int) productos.jtStock.getValueAt(fila, 3);
-            suma = suma - disminuir;
-            datos.removeRow(productos.jtStock.getSelectedRow());
-            out.println(suma);
+            if(fila==-1){
+                JOptionPane.showMessageDialog(null,"Seleccione una fila");
+            }else{
+                int disminuir = (int) productos.jtStock.getValueAt(fila, 3);
+                suma = suma - disminuir;
+                datos.removeRow(productos.jtStock.getSelectedRow());
+            }            
         }
         if(e.getSource().equals(gestionar.btnAgregarColor)){
-            ColorP color = new ColorP(bd.ultimoCodColor(),gestionar.jtfNuvoColor.getText());
-            bd.agregarColor(color);
-            listarTablaGestion();
-            gestionar.jtfNuvoColor.setText("");
+            if(gestionar.jtfNuvoColor.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null,"Indique el color a incluir");
+            }else{
+                ColorP color = new ColorP(bd.ultimoCodColor(),gestionar.jtfNuvoColor.getText());
+                bd.agregarColor(color);
+                listarTablaGestion();
+                gestionar.jtfNuvoColor.setText("");
+            }            
+            
         }
         if(e.getSource().equals(gestionar.btnAgregarMarca)){
-            Marca marca = new Marca(bd.ultimoCodMarca(),gestionar.jtfNvaMarca.getText());
-            bd.agregarMarca(marca);
-            listarTablaGestion();
-            gestionar.jtfNvaMarca.setText("");
+            if(gestionar.jtfNvaMarca.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null,"Indique la marca a incluir");
+            }else{
+                Marca marca = new Marca(bd.ultimoCodMarca(),gestionar.jtfNvaMarca.getText());
+                bd.agregarMarca(marca);
+                listarTablaGestion();
+                gestionar.jtfNvaMarca.setText("");
+            }
         }
         if(e.getSource().equals(gestionar.btnBuscarP)){
             agregarCaracteristica();
         }
         if(e.getSource().equals(gestionar.btnAgregarCantidad)){
-            actualizarStock();
-            agregarCaracteristica();
+            if(gestionar.jtfCantidad.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null,"Indique la cantidad a incluir");
+            }else{
+                actualizarStock();
+                agregarCaracteristica();
+            }
         }
+        e.setSource("");
     }
 
     private void agregarProductoSolo() {
-        int codigo = parseInt(productos.jtfNombre.getText());
-        String descripcion = productos.jtfDescripcion.getText();
-        double iva = parseDouble(productos.jtfIVA.getText());
-        double costo = parseDouble(productos.jtfCosto.getText());
-        double margen = parseDouble(productos.jtfMargen.getText());
+        if(productos.jtfNombre.getText().isEmpty()||productos.jtfDescripcion.getText().isEmpty()||
+                productos.jtfIVA.getText().isEmpty()||productos.jtfCosto.getText().isEmpty()||
+                productos.jtfMargen.getText().isEmpty()||productos.cbMarca.getSelectedItem().toString().isEmpty()||
+                productos.cbRubro.getSelectedItem().toString().isEmpty()||productos.jtfCantidad.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Campos vacios");
+        }else{
+            productos.btnAgregarProd.setEnabled(true);
+            int codigo = parseInt(productos.jtfNombre.getText());
+            String descripcion = productos.jtfDescripcion.getText();
+            double iva = parseDouble(productos.jtfIVA.getText());
+            double costo = parseDouble(productos.jtfCosto.getText());
+            double margen = parseDouble(productos.jtfMargen.getText());
         
-        String marca = (String) productos.cbMarca.getSelectedItem();       
-        String rubro = (String) productos.cbRubro.getSelectedItem();
-        int stock = parseInt(productos.jtfCantidad.getText());
-//        String talle = (String) productos.cbTalle.getSelectedItem();
-//        String colorr = (String) productos.cbColor.getSelectedItem();
+            String marca = (String) productos.cbMarca.getSelectedItem();       
+            String rubro = (String) productos.cbRubro.getSelectedItem();
+            int stock = parseInt(productos.jtfCantidad.getText());
         
-        Marca m = new Marca(bd.buscarCodMarca(marca),marca);
-        Rubro r = new Rubro(bd.buscarCodRubro(rubro),rubro);
-//        Talle t = new Talle(bd.buscarCodTalle(talle),talle);
-//        ColorP c = new ColorP(bd.buscarCodColor(colorr),colorr);        
+            Marca m = new Marca(bd.buscarCodMarca(marca),marca);
+            Rubro r = new Rubro(bd.buscarCodRubro(rubro),rubro);
         
-        Stock s = new Stock(codigo,stock);
-        Producto productoEnvio = new Producto(codigo,descripcion,iva,costo,margen,m,r,s,1);
-        bd.agregarProducto(productoEnvio,s,m,r);
-        listarTabla();       
-        showMessageDialog(null, "Producto agregado con exito");
+            Stock s = new Stock(codigo,stock);
+            Producto productoEnvio = new Producto(codigo,descripcion,iva,costo,margen,m,r,s,1);
+            bd.agregarProducto(productoEnvio,s,m,r);
+            listarTabla();       
+            showMessageDialog(null, "Producto agregado con exito");
+            productos.btnAgregarProd.setEnabled(false);
+        }
+        
     }
 
     private void agregarProducto() {
-        int codigo = parseInt(productos.jtfNombre.getText());
-        String descripcion = productos.jtfDescripcion.getText();
-        double iva = parseDouble(productos.jtfIVA.getText());
-        double costo = parseDouble(productos.jtfCosto.getText());
-        double margen = parseDouble(productos.jtfMargen.getText());
+        if(productos.jtfNombre.getText().isEmpty()||productos.jtfDescripcion.getText().isEmpty()||
+                productos.jtfIVA.getText().isEmpty()||productos.jtfCosto.getText().isEmpty()||
+                productos.jtfMargen.getText().isEmpty()||productos.cbMarca.getSelectedItem().toString().isEmpty()||
+                productos.cbRubro.getSelectedItem().toString().isEmpty()||productos.jtfCantidad.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Campos vacios");
+        }else{
+            int codigo = parseInt(productos.jtfNombre.getText());
+            String descripcion = productos.jtfDescripcion.getText();
+            double iva = parseDouble(productos.jtfIVA.getText());
+            double costo = parseDouble(productos.jtfCosto.getText());
+            double margen = parseDouble(productos.jtfMargen.getText());
         
-        String marca = (String) productos.cbMarca.getSelectedItem();       
-        String rubro = (String) productos.cbRubro.getSelectedItem();
-        int stock = parseInt(productos.jtfCantidad.getText());
+            String marca = (String) productos.cbMarca.getSelectedItem();       
+            String rubro = (String) productos.cbRubro.getSelectedItem();
+            int stock = parseInt(productos.jtfCantidad.getText());
         
-        Marca m = new Marca(bd.buscarCodMarca(marca),marca);
-        Rubro r = new Rubro(bd.buscarCodRubro(rubro),rubro);       
-        Stock s = new Stock(codigo,stock);
+            Marca m = new Marca(bd.buscarCodMarca(marca),marca);
+            Rubro r = new Rubro(bd.buscarCodRubro(rubro),rubro);       
+            Stock s = new Stock(codigo,stock);
         
-        Producto productoEnvio = new Producto(codigo,descripcion,iva,costo,margen,m,r,s,1);
-        bd.agregarProducto(productoEnvio,s,m,r);
+            Producto productoEnvio = new Producto(codigo,descripcion,iva,costo,margen,m,r,s,1);
+            bd.agregarProducto(productoEnvio,s,m,r);
         
-        for(int i=0;i<productos.jtStock.getRowCount();i++){            
-            Talle t = new Talle(bd.buscarCodTalle(productos.jtStock.getValueAt(i,1).toString()),productos.jtStock.getValueAt(i,1).toString());
-            ColorP c = new ColorP(bd.buscarCodColor(productos.jtStock.getValueAt(i,2).toString()),productos.jtStock.getValueAt(i,2).toString()); 
-            int cantidad = parseInt(productos.jtStock.getValueAt(i, 3).toString());
-            bd.agregarStock(codigo, t, c, cantidad);
-        }        
-        
-        listarTabla();       
-        showMessageDialog(null, "Producto agregado con exito");
+            for(int i=0;i<productos.jtStock.getRowCount();i++){            
+                Talle t = new Talle(bd.buscarCodTalle(productos.jtStock.getValueAt(i,1).toString()),productos.jtStock.getValueAt(i,1).toString());
+                ColorP c = new ColorP(bd.buscarCodColor(productos.jtStock.getValueAt(i,2).toString()),productos.jtStock.getValueAt(i,2).toString()); 
+                int cantidad = parseInt(productos.jtStock.getValueAt(i, 3).toString());
+                bd.agregarStock(codigo, t, c, cantidad);
+            }                
+            listarTabla();       
+            showMessageDialog(null, "Producto agregado con exito");
+        }
     }
     
     public void listarTabla() {
@@ -249,21 +309,21 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
         }
     }
 
-    public void borrarjtf() {
-        productos.jtfCosto.setText(null);
-        productos.jtfDescripcion.setText(null);
-        productos.jtfNombre.setText(null);
-        productos.jtfIVA.setText(null);
-        productos.jtfMargen.setText(null);
-        productos.jtfCantidadS.setText(null);
-        
-        modProductos.jtfCosto.setText(null);
-        modProductos.jtfDescripcion.setText(null);
-        modProductos.jtfNombre.setText(null);
-        modProductos.jtfIVA.setText(null);
-        modProductos.jtfMargen.setText(null);
-        modProductos.jtfCantidad.setText(null);
-    }
+//    public void borrarjtf() {
+//        productos.jtfCosto.setText(null);
+//        productos.jtfDescripcion.setText(null);
+//        productos.jtfNombre.setText(null);
+//        productos.jtfIVA.setText(null);
+//        productos.jtfMargen.setText(null);
+//        productos.jtfCantidadS.setText(null);
+//        
+//        modProductos.jtfCosto.setText(null);
+//        modProductos.jtfDescripcion.setText(null);
+//        modProductos.jtfNombre.setText(null);
+//        modProductos.jtfIVA.setText(null);
+//        modProductos.jtfMargen.setText(null);
+//        modProductos.jtfCantidad.setText(null);
+//    }
     
     public void cargarCombos(){
         productos.cbMarca.removeAllItems();
@@ -460,33 +520,43 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
     }
 
     private void modProducto() {
-        int codigo = parseInt(modProductos.jtfNombre.getText());
-        String descripcion = modProductos.jtfDescripcion.getText();
-        double iva = parseDouble(modProductos.jtfIVA.getText());
-        double costo = parseDouble(modProductos.jtfCosto.getText());
-        double margen = parseDouble(modProductos.jtfMargen.getText());
+        if(!modProductos.jtfNombre.getText().isEmpty()&&!modProductos.jtfDescripcion.getText().isEmpty()&&
+                !modProductos.jtfIVA.getText().isEmpty()&& !modProductos.jtfCosto.getText().isEmpty()&&
+                !modProductos.jtfMargen.getText().isEmpty()&&!modProductos.cbMarca.getSelectedItem().toString().isEmpty()&&
+                !modProductos.cbRubro.getSelectedItem().toString().isEmpty()){
+            int codigo = parseInt(modProductos.jtfNombre.getText());
+            String descripcion = modProductos.jtfDescripcion.getText();
+            double iva = parseDouble(modProductos.jtfIVA.getText());
+            double costo = parseDouble(modProductos.jtfCosto.getText());
+            double margen = parseDouble(modProductos.jtfMargen.getText());
+            
+            String marca = (String) modProductos.cbMarca.getSelectedItem();       
+            String rubro = (String) modProductos.cbRubro.getSelectedItem();
         
-        String marca = (String) modProductos.cbMarca.getSelectedItem();       
-        String rubro = (String) modProductos.cbRubro.getSelectedItem();
-        
-        Marca m = new Marca(bd.buscarCodMarca(marca),marca);
-        Rubro r = new Rubro(bd.buscarCodRubro(rubro),rubro);        
-        
-        Producto productoEnvio = new Producto(codigo,descripcion,iva,costo,margen,m,r,1);
-        bd.modificarProducto(productoEnvio,m,r);
-        listarTabla();
-        borrarjtf();        
-        modProductos.jtfNombre.setEnabled(true);        
-        showMessageDialog(null, "Producto modificado con exito");
+            Marca m = new Marca(bd.buscarCodMarca(marca),marca);
+            Rubro r = new Rubro(bd.buscarCodRubro(rubro),rubro);
+            
+            Producto productoEnvio = new Producto(codigo,descripcion,iva,costo,margen,m,r,1);
+            bd.modificarProducto(productoEnvio,m,r);
+            listarTabla();
+            modProductos.jtfNombre.setEnabled(true);        
+            showMessageDialog(null, "Producto modificado con exito");
+        }else{
+            JOptionPane.showMessageDialog(null,"Campos vacios en la modificacion");
+        }      
     }
 
     private void eliminarProducto() {
         DefaultTableModel datos = (DefaultTableModel) listaProd.jtProductos.getModel(); 
         int fila = listaProd.jtProductos.getSelectedRow();
-        if(listaProd.jtProductos.getValueAt(fila, 0)!=null){
-            int codProducto = (int) listaProd.jtProductos.getValueAt(fila, 0);
-            bd.eliminarProducto(codProducto);
-        } 
+        if(fila==-1){
+            JOptionPane.showMessageDialog(null, "Ninguna fila seleccionada");
+        }else{
+            if(listaProd.jtProductos.getValueAt(fila, 0)!=null){
+                int codProducto = (int) listaProd.jtProductos.getValueAt(fila, 0);
+                bd.eliminarProducto(codProducto);
+            } 
+        }
     }
 
     public void cargarCombosGestiones() {
@@ -532,41 +602,58 @@ public class PresentadorProductos implements ActionListener, java.awt.event.Item
     }
 
     private void agregarCaracteristica() {
-        if(bd.existe(gestionar.jtfNombre.getText())){
-            DefaultTableModel datosProductos = (DefaultTableModel) gestionar.jtCaracteristicas.getModel();
-            datosProductos.setNumRows(0);
-        
-            Producto p = bd.buscarProducto(gestionar.jtfNombre.getText());
-            gestionar.jtfDescripcion.setText(p.getDescripcion());
-            gestionar.jtfMarca.setText(p.getMarca().getDescripcionM());
-            gestionar.jtfDescripcion.setEnabled(false);
-            gestionar.jtfMarca.setEnabled(false);
-        
-            ArrayList<Auxiliar> listaCarac = bd.listarCaracteristicas(""+p.getCodigo());
-        
-            for(int i = 0;i<listaCarac.size();i++){
-                Object[] fila = {listaCarac.get(i).getTalle(),
-                                 listaCarac.get(i).getColor(),
-                                 listaCarac.get(i).getCantidad(),
-                                };
-            
-            datosProductos.addRow(fila);
-            }
+        if(gestionar.jtfNombre.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null,"Indique el producto a gestionar");
         }else{
-            showMessageDialog(null, "El producto no exite");
-            gestionar.jtfNombre.setText("");
+            if(bd.existe(gestionar.jtfNombre.getText())){
+                DefaultTableModel datosProductos = (DefaultTableModel) gestionar.jtCaracteristicas.getModel();
+                datosProductos.setNumRows(0);
+        
+                Producto p = bd.buscarProducto(gestionar.jtfNombre.getText());
+                gestionar.jtfDescripcion.setText(p.getDescripcion());
+                gestionar.jtfMarca.setText(p.getMarca().getDescripcionM());
+                gestionar.jtfDescripcion.setEnabled(false);
+                gestionar.jtfMarca.setEnabled(false);
+                gestionar.jlLimite.setText(""+p.getStock().getCantidad());
+                
+                ArrayList<Auxiliar> listaCarac = bd.listarCaracteristicas(""+p.getCodigo());
+        
+                for(int i = 0;i<listaCarac.size();i++){
+                    Object[] fila = {listaCarac.get(i).getTalle(),
+                                    listaCarac.get(i).getColor(),
+                                    listaCarac.get(i).getCantidad(),
+                                    };
+            
+                datosProductos.addRow(fila);
+                }
+            }else{
+                showMessageDialog(null, "El producto no exite");
+                gestionar.jtfNombre.setText("");
+            }
         }
     }
 
     private void actualizarStock() {
         String codigo = gestionar.jtfNombre.getText();
         int cant = Integer.parseInt(gestionar.jtfCantidad.getText());
-            
+        int scant = 0;
         Producto p = bd.buscarProducto(codigo);    
         Talle t = new Talle(bd.buscarCodTalle((String) gestionar.cbTalle.getSelectedItem()),(String) gestionar.cbTalle.getSelectedItem());
         ColorP co = new ColorP(bd.buscarCodColor((String) gestionar.cbColor.getSelectedItem()),(String) gestionar.cbColor.getSelectedItem());
-            
-        bd.actualizarStockG(p.getCodigo(),cant,t,co);
+        
+        DefaultTableModel datosProductos = (DefaultTableModel) gestionar.jtCaracteristicas.getModel();
+        for(int i=0; i<datosProductos.getRowCount();i++){
+            int valor = Integer.parseInt(datosProductos.getValueAt(i, 2).toString());
+            scant = scant + valor;
+        }
+        
+        int cantTotal = scant + Integer.parseInt(gestionar.jtfCantidad.getText());
+        if(cantTotal<=Integer.parseInt(gestionar.jlLimite.getText())){
+            bd.actualizarStockG(p.getCodigo(),cant,t,co);
+        }else{
+            JOptionPane.showMessageDialog(null,"La cantidad indicada supera la cantidad de productos posibles a diferenciar");
+        }
+        
     }
     
 }

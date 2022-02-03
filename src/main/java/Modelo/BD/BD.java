@@ -537,9 +537,7 @@ public class BD {
 
     public void agregarStock(int cod, Talle t, ColorP co, int cantidadS) {
         try{
-            String cadena1="";
-            String cadena2="";
-            cadena1 = "insert into color_has_talle values (%1,%2,%3,%4)"
+            String cadena1 = "insert into color_has_talle values (%1,%2,%3,%4)"
                                 .replace("%1",""+co.getIdColor()) 
                                 .replace("%2",""+t.getIdTalle())
                                 .replace("%3",""+cantidadS)
@@ -570,11 +568,11 @@ public class BD {
         try {
           Connection c = getConnection();
           Statement s = c.createStatement();
-          String sql = "select DISTINCT a.idColor, a.descripcion from color as a, producto as b, stock as c, color_has_talle as d \n" +
+          String sql = "select DISTINCT a.idColor, a.descripcion, d.cantidad from color as a, producto as b, stock as c, color_has_talle as d \n" +
                         "where b.Stock_idStock = c.idStock and\n" +
                         "c.idStock = d.Stock_idStock and\n" +
                         "d.Color_idColor = a.idColor and\n" +
-                        "b.codProducto = %1".replace("%1",""+cod);
+                        "b.codProducto = %1 and d.cantidad > 0".replace("%1",""+cod);
           ResultSet r = s.executeQuery(sql);
                   
           while(r.next()){
@@ -615,12 +613,12 @@ public class BD {
         try {
           Connection c = getConnection();
           Statement s = c.createStatement();
-          String sql = "select distinct a.idTalle, a.descripcion from talle as a, producto as b, stock as c, color_has_talle as d, tipodetalle as e\n" +
+          String sql = "select distinct a.idTalle, a.descripcion, d.cantidad from talle as a, producto as b, stock as c, color_has_talle as d, tipodetalle as e\n" +
                         "where b.codProducto = c.idStock\n" +
                         "and c.idStock = d.Stock_idStock\n" +
                         "and d.Talle_idTalle = a.idTalle\n" +
                         "and a.Tipodetalle_idTipoTalle = e.idTipoTalle\n" +
-                        "and e.idTipoTalle = %1 and b.codProducto = %2"
+                        "and e.idTipoTalle = %1 and b.codProducto = %2 and d.cantidad > 0"
                         .replace("%1",""+cod)
                         .replace("%2",tipo);
           ResultSet r = s.executeQuery(sql);
@@ -652,7 +650,7 @@ public class BD {
         }
     }
 
-    public void actualizarStock(int codigo, int cantidad, int id, Talle t, ColorP co, double subtotal) {
+    public void actualizarStock(int codigo, int cantidad, int id, Talle t, ColorP co, double subtotal, double precio) {
         try{
             String cadena1 = "update stock as a INNER JOIN producto as b set a.cantidad = a.cantidad - %1 where a.idStock = b.Stock_idStock and b.codProducto = %2"
             .replace("%1",""+cantidad)
@@ -664,11 +662,14 @@ public class BD {
                               .replace("%3",""+t.getIdTalle())
                               .replace("%4",""+co.getIdColor());
                 
-            String cadena3 = "insert into lineadeventa values (null,%2,%3,%4,%5)"
+            String cadena3 = "insert into lineadeventa values (null,%2,%3,%4,%5,%6,%7,%8)"
             .replace("%2",""+cantidad)
             .replace("%3",""+id)
             .replace("%4",""+codigo)
-            .replace("%5",""+subtotal);
+            .replace("%5",""+subtotal)
+            .replace("%6",""+precio)
+            .replace("%7",""+t.getIdTalle())
+            .replace("%8",""+co.getIdColor());
                 
             Connection c = getConnection();
             c.createStatement().executeUpdate(cadena1);   
@@ -682,27 +683,32 @@ public class BD {
 
     public void actualizarStockG(int codigo, int cantidad, Talle t, ColorP co) {
         try{
-            String cadena2 = "";
-            String cadena1 = "update stock as a INNER JOIN producto as b set a.cantidad = a.cantidad + %1 where a.idStock = b.Stock_idStock and b.codProducto = %2"
-            .replace("%1",""+cantidad)
-            .replace("%2",""+codigo);             
+            String cadena1 = null;
+            String cadena2 = null;
+            Connection c = getConnection();
             
-            if(existeColorTalle(codigo, co.getIdColor(),t.getIdTalle())){
-                cadena2 = "update color_has_talle inner join producto, color, talle, stock set color_has_talle.cantidad = color_has_talle.cantidad + %1 where producto.codProducto = stock.idStock and stock.idStock = color_has_talle.Stock_idStock and color_has_talle.Color_idColor = %4 and color_has_talle.Talle_idTalle = %3 and producto.codProducto=%2"
+            if(!existe(""+codigo)){
+                System.out.println("entre");
+                cadena1 = "update stock as a INNER JOIN producto as b set a.cantidad = a.cantidad + %1 where a.idStock = b.Stock_idStock and b.codProducto = %2"
+                        .replace("%1",""+cantidad)
+                        .replace("%2",""+codigo);
+                c.createStatement().executeUpdate(cadena1); 
+            }else{                                     
+                if(existeColorTalle(codigo, co.getIdColor(),t.getIdTalle())){
+                    cadena2 = "update color_has_talle inner join producto, color, talle, stock set color_has_talle.cantidad = color_has_talle.cantidad + %1 where producto.codProducto = stock.idStock and stock.idStock = color_has_talle.Stock_idStock and color_has_talle.Color_idColor = %4 and color_has_talle.Talle_idTalle = %3 and producto.codProducto=%2"
                               .replace("%1",""+cantidad)
                               .replace("%2",""+codigo)
                               .replace("%3",""+t.getIdTalle())
                               .replace("%4",""+co.getIdColor());
-            }else{
-                cadena2 = "insert into color_has_talle values(%1,%2,%3,%4)"
-                        .replace("%1",""+co.getIdColor())
-                        .replace("%2",""+t.getIdTalle())
-                        .replace("%3",""+cantidad)
-                        .replace("%4",""+codigo);                        
-            }            
-                
-            Connection c = getConnection();
-            c.createStatement().executeUpdate(cadena1);   
+                }else{
+                    cadena2 = "insert into color_has_talle values(%1,%2,%3,%4)"
+                                .replace("%1",""+co.getIdColor())
+                                .replace("%2",""+t.getIdTalle())
+                                .replace("%3",""+cantidad)
+                                .replace("%4",""+codigo);                        
+                }
+            }                         
+              
             c.createStatement().executeUpdate(cadena2);                       
         }
         catch(Exception e){
@@ -850,7 +856,7 @@ public class BD {
         return cantidad;
     }
 
-    public void restaurarStock(String codigo, int cant, Talle t, ColorP co, int linea) {
+    public void restaurarStock(String codigo, int cant, Talle t, ColorP co, int idVenta) {
         try{
             String cadena1 = "update stock as a INNER JOIN producto as b set a.cantidad = a.cantidad + %1 where a.idStock = b.Stock_idStock and b.codProducto = %2"
             .replace("%1",""+cant)
@@ -862,7 +868,7 @@ public class BD {
                               .replace("%3",""+t.getIdTalle())
                               .replace("%4",""+co.getIdColor());
             
-            String cadena3 = "delete from lineadeventa where Venta_idVenta = %1".replace("%1",""+linea);
+            String cadena3 = "delete from lineadeventa where Venta_idVenta = %1".replace("%1",""+idVenta);
             
             Connection c = getConnection();
             c.createStatement().executeUpdate(cadena1);   
@@ -873,14 +879,37 @@ public class BD {
             e.printStackTrace();
         }
     }
-
+    
+    public void restaurarStockL(String codigo, int cant, Talle t, ColorP co) {
+        try{
+            String cadena1 = "update stock as a INNER JOIN producto as b set a.cantidad = a.cantidad + %1 where a.idStock = b.Stock_idStock and b.codProducto = %2"
+            .replace("%1",""+cant)
+            .replace("%2",""+codigo);             
+                
+            String cadena2 = "update color_has_talle as a INNER JOIN talle as b, producto as c, stock as d, color as e set a.cantidad = a.cantidad + %1 where a.Stock_idStock = d.idStock and d.idStock = c.Stock_idStock and a.Talle_idTalle = b.idTalle and a.Color_idColor = e.idColor and c.codProducto = %2 and b.idTalle = %3 and e.idColor=%4"
+                              .replace("%1",""+cant)
+                              .replace("%2",""+codigo)
+                              .replace("%3",""+t.getIdTalle())
+                              .replace("%4",""+co.getIdColor());
+            
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1);   
+            c.createStatement().executeUpdate(cadena2);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
     public void registrarFactura(Factura fact) {
         try{
-            String cadena1 = "insert into factura values (%1,'%2',%3,%4)"
+            String cadena1 = "insert into factura values (%1,'%2',%3,%4,%5,%6)"
             .replace("%1",""+fact.getNumFact())
             .replace("%2",fact.getFecha())
             .replace("%3",""+fact.getTotal())
-            .replace("%4",""+fact.getVenta().getNroComprobante());
+            .replace("%4",""+fact.getVenta().getNroComprobante())
+            .replace("%5",""+fact.getNumFact())
+            .replace("%6",""+1);
            
             Connection c = getConnection();
             c.createStatement().executeUpdate(cadena1);    
@@ -890,6 +919,7 @@ public class BD {
         }
     }
 
+    
     public FormaDePago buscarFormaPago(String descripcion) {
         FormaDePago fdp = new FormaDePago();
         int cod = 0;
@@ -1073,7 +1103,7 @@ public class BD {
         try {
             Connection c = getConnection();
             Statement s = c.createStatement();
-            String sql = "select a.idVenta, a.fecha, a.total, b.numFactura, c.cuit, c.razonSocial, c.domicilio, c.email, c.cond_tributaria from venta as a, factura as b, cliente as c\n" +
+            String sql = "select a.idVenta, a.fecha, a.total, b.numFactura, b.visible, c.cuit, c.razonSocial, c.domicilio, c.email, c.cond_tributaria from venta as a, factura as b, cliente as c\n" +
                         "where a.idVenta = b.Venta_idVenta\n" +
                         "and a.Cliente_cuit = c.cuit\n" +
                         "and c.cuit = %1 and %2 = %3"
@@ -1112,7 +1142,7 @@ public class BD {
         try {
             Connection c = getConnection();
             Statement s = c.createStatement();
-            String sql = "select a.idLinea, b.descripcion, b.codProducto, a.cantidad, a.subtotal from lineadeventa as a, producto as b, venta as c\n" +
+            String sql = "select a.idLinea, a.Color_idColor, a.Talle_idTalle, b.descripcion, b.codProducto, a.cantidad, a.subtotal, a.precioU from lineadeventa as a, producto as b, venta as c\n" +
                           "where c.idVenta = a.Venta_idVenta\n" +
                           "and a.Producto_codProducto = b.codProducto\n" +
                           "and c.idVenta = %1"
@@ -1120,11 +1150,17 @@ public class BD {
             ResultSet r = s.executeQuery(sql);
                   
             while(r.next()){
-                Producto p = buscarProducto(r.getString("b.codProducto"));                 
+                Producto p = buscarProducto(r.getString("b.codProducto"));   
+                ColorP co = new ColorP(r.getInt("Color_idColor"),buscarDColor(r.getInt("a.Color_idColor")));
+                Talle talle = new Talle(r.getInt("Talle_idTalle"),buscarDTalle(r.getInt("a.Talle_idTalle")));
                 LineaDeVenta li = new LineaDeVenta();
+                li.setIdLinea(r.getInt("a.idLinea"));
                 li.setCantidad(r.getInt("a.cantidad"));
                 li.setProducto(p);
                 li.setSubtotal(r.getDouble("a.subtotal"));
+                li.setPrecioU(r.getDouble("a.precioU"));
+                li.setColor(co);
+                li.setTalle(talle);
                 lineas.add(li);
             }          
         } catch(Exception e){
@@ -1205,6 +1241,20 @@ public class BD {
                                 .replace("%2",cae)
                                 .replace("%3",caeFchVto)
                                 .replace("%4",condicion);          
+            
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1); 
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarLinea(int linea, int cantidad) {
+        try{
+            String cadena1 = "update lineadeventa set cantidad = cantidad - %1 where idLinea = %2"
+                                .replace("%1",""+cantidad) 
+                                .replace("%2",""+linea);          
             
             Connection c = getConnection();
             c.createStatement().executeUpdate(cadena1); 

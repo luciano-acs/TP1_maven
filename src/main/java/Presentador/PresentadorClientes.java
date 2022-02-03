@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Presentador;
 
 import Modelo.BD.BD;
@@ -15,6 +11,7 @@ import java.awt.event.ActionListener;
 import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,11 +26,15 @@ public class PresentadorClientes implements ActionListener{
     public PresentadorClientes(pClientes cl){
         this.clientes = cl;
         clientes.btnBuscarC.addActionListener(this);
+        clientes.jtfBuscar.setText("");
     }
 
     PresentadorClientes(nvoCliente nvoCliente) {
         this.nvoCliente = nvoCliente;
         nvoCliente.btnRegistrarC.addActionListener(this);
+        nvoCliente.jtfDomicilio.setText("");
+        nvoCliente.jtfEmail.setText("");
+        nvoCliente.jtfRazon.setText("");
     }
 
     void listarTabla() {
@@ -60,16 +61,23 @@ public class PresentadorClientes implements ActionListener{
             buscarClientesTabla();
         }
         if(e.getSource().equals(nvoCliente.btnRegistrarC)){
-            Cliente cl = new Cliente();
-              cl.setCuit(nvoCliente.jtlCUIT.getText());
-              cl.setCondicion(nvoCliente.cbCond.getSelectedItem().toString());
-              cl.setDomicilio(nvoCliente.jtfDomicilio.getText());
-              cl.setEmail(nvoCliente.jtfEmail.getText());
-              cl.setRazonSocial(nvoCliente.jtfRazon.getText());
-            
-              bd.registrarCliente(cl);
-              nvoCliente.dispose();
+            if(nvoCliente.jtlCUIT.getText().isEmpty()||nvoCliente.cbCond.getSelectedItem().toString().isEmpty()||
+                    nvoCliente.jtfDomicilio.getText().isEmpty()||nvoCliente.jtfEmail.getText().isEmpty()||
+                    nvoCliente.jtfRazon.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null,"Campos vacios");
+            }else{
+                Cliente cl = new Cliente();
+                cl.setCuit(nvoCliente.jtlCUIT.getText());
+                cl.setCondicion(nvoCliente.cbCond.getSelectedItem().toString());
+                cl.setDomicilio(nvoCliente.jtfDomicilio.getText());
+                cl.setEmail(nvoCliente.jtfEmail.getText());
+                cl.setRazonSocial(nvoCliente.jtfRazon.getText());
+                
+                bd.registrarCliente(cl);
+                nvoCliente.dispose();
+            }             
         }
+        e.setSource("");
     }
 
     private void buscarClientesTabla() {
