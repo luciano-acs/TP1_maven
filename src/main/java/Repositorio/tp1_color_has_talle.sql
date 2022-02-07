@@ -16,31 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `color_has_stock`
+-- Table structure for table `color_has_talle`
 --
 
-DROP TABLE IF EXISTS `color_has_stock`;
+DROP TABLE IF EXISTS `color_has_talle`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `color_has_stock` (
-  `Stock_idStock` int NOT NULL,
+CREATE TABLE `color_has_talle` (
   `Color_idColor` int NOT NULL,
+  `Talle_idTalle` int NOT NULL,
   `cantidad` int DEFAULT NULL,
-  KEY `fk_stock_has_talle_Color1_idx` (`Color_idColor`),
-  KEY `fk_color_has_stock_Stock1_idx` (`Stock_idStock`),
-  CONSTRAINT `fk_color_has_stock_Color1` FOREIGN KEY (`Color_idColor`) REFERENCES `color` (`idColor`),
-  CONSTRAINT `fk_color_has_stock_Stock1` FOREIGN KEY (`Stock_idStock`) REFERENCES `stock` (`idStock`)
+  `Stock_idStock` int DEFAULT NULL,
+  KEY `fk_Color_has_Talle_Talle1_idx` (`Talle_idTalle`),
+  KEY `fk_Color_has_Talle_Color1_idx` (`Color_idColor`),
+  KEY `fk_Color_has_Talle_Stock1_idx` (`Stock_idStock`),
+  CONSTRAINT `fk_Color_has_Talle_Color1` FOREIGN KEY (`Color_idColor`) REFERENCES `color` (`idColor`),
+  CONSTRAINT `fk_Color_has_Talle_Stock1` FOREIGN KEY (`Stock_idStock`) REFERENCES `stock` (`idStock`),
+  CONSTRAINT `fk_Color_has_Talle_Talle1` FOREIGN KEY (`Talle_idTalle`) REFERENCES `talle` (`idTalle`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `color_has_stock`
+-- Dumping data for table `color_has_talle`
 --
 
-LOCK TABLES `color_has_stock` WRITE;
-/*!40000 ALTER TABLE `color_has_stock` DISABLE KEYS */;
-INSERT INTO `color_has_stock` VALUES (1,1,5),(1,1,5),(2,1,0),(2,2,5);
-/*!40000 ALTER TABLE `color_has_stock` ENABLE KEYS */;
+LOCK TABLES `color_has_talle` WRITE;
+/*!40000 ALTER TABLE `color_has_talle` DISABLE KEYS */;
+INSERT INTO `color_has_talle` VALUES (1,10,0,1),(2,10,2,1);
+/*!40000 ALTER TABLE `color_has_talle` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-29 16:03:57
+-- Dump completed on 2022-02-06 22:28:35

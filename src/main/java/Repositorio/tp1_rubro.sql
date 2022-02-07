@@ -35,7 +35,7 @@ CREATE TABLE `rubro` (
 
 LOCK TABLES `rubro` WRITE;
 /*!40000 ALTER TABLE `rubro` DISABLE KEYS */;
-INSERT INTO `rubro` VALUES (1,'hombre'),(2,'mujer'),(3,'unisex');
+INSERT INTO `rubro` VALUES (1,'Deportivo'),(2,'Urbano');
 /*!40000 ALTER TABLE `rubro` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -48,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-29 16:03:58
+-- Dump completed on 2022-02-06 22:28:36

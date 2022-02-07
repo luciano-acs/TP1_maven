@@ -27,7 +27,11 @@ CREATE TABLE `factura` (
   `fecha` varchar(8) DEFAULT NULL,
   `total` double DEFAULT NULL,
   `Venta_idVenta` int DEFAULT NULL,
+  `Afip_idAfip` int DEFAULT NULL,
+  `visible` int DEFAULT NULL,
   KEY `fk__idx` (`Venta_idVenta`),
+  KEY `fk_Factura_Afip1_idx` (`Afip_idAfip`),
+  CONSTRAINT `fk_Factura_Afip1` FOREIGN KEY (`Afip_idAfip`) REFERENCES `afip` (`idAfip`),
   CONSTRAINT `fk_Factura_Venta1` FOREIGN KEY (`Venta_idVenta`) REFERENCES `venta` (`idVenta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -38,7 +42,7 @@ CREATE TABLE `factura` (
 
 LOCK TABLES `factura` WRITE;
 /*!40000 ALTER TABLE `factura` DISABLE KEYS */;
-INSERT INTO `factura` VALUES (9,'20220129',28586.25,202201291);
+INSERT INTO `factura` VALUES (32,'20220202',28586.25,1,32,1),(33,'20220203',11434.5,2,33,1),(34,'20220203',22869,3,34,1),(35,'20220203',11434.5,4,35,1),(36,'20220203',11434.5,5,36,1);
 /*!40000 ALTER TABLE `factura` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-29 16:03:58
+-- Dump completed on 2022-02-06 22:28:37

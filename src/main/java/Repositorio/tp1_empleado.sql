@@ -42,7 +42,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (44444,'Luciano Nicolas','Acosta','luciano.acosta@alu.frt.utn.edu.ar','123456','V',1),(66666,'Martin','Guzman','martin.guzman@gmail.com','default','A',1),(88888,'Carolina','Herrera','carolina.herrera@gmail.com','654321','G',1);
+INSERT INTO `empleado` VALUES (1,'super','usuario',NULL,'super','S',1),(44444,'Luciano Nicolas','Acosta','luciano.acosta@alu.frt.utn.edu.ar','123456','V',1),(66666,'Martin','Guzman','martin.guzman@gmail.com','default','A',1),(88888,'Carolina','Herrera','carolina.herrera@gmail.com','654321','G',1);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-29 16:03:59
+-- Dump completed on 2022-02-06 22:28:35

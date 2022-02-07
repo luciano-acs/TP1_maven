@@ -16,31 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `stock_has_talle`
+-- Table structure for table `afip`
 --
 
-DROP TABLE IF EXISTS `stock_has_talle`;
+DROP TABLE IF EXISTS `afip`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `stock_has_talle` (
-  `Stock_idStock` int NOT NULL,
-  `Talle_idTalle` int NOT NULL,
-  `cantidad` int DEFAULT NULL,
-  KEY `fk_stock_has_talle_Talle1_idx` (`Talle_idTalle`),
-  KEY `fk_sotck_has_talle_Stock1_idx` (`Stock_idStock`),
-  CONSTRAINT `fk_sotck_has_talle_Stock1` FOREIGN KEY (`Stock_idStock`) REFERENCES `stock` (`idStock`),
-  CONSTRAINT `fk_stock_has_talle_Talle1` FOREIGN KEY (`Talle_idTalle`) REFERENCES `talle` (`idTalle`)
+CREATE TABLE `afip` (
+  `idAfip` int NOT NULL,
+  `CAE` varchar(45) DEFAULT NULL,
+  `fechaVtoCAE` varchar(45) DEFAULT NULL,
+  `condicion` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idAfip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `stock_has_talle`
+-- Dumping data for table `afip`
 --
 
-LOCK TABLES `stock_has_talle` WRITE;
-/*!40000 ALTER TABLE `stock_has_talle` DISABLE KEYS */;
-INSERT INTO `stock_has_talle` VALUES (1,11,5),(1,12,5),(2,8,0),(2,9,5);
-/*!40000 ALTER TABLE `stock_has_talle` ENABLE KEYS */;
+LOCK TABLES `afip` WRITE;
+/*!40000 ALTER TABLE `afip` DISABLE KEYS */;
+INSERT INTO `afip` VALUES (32,'72051985902001','20220212','efectivo'),(33,'72051985902747','20220213','efectivo'),(34,'72051985902776','20220213','efectivo'),(35,'72051985902807','20220213','efectivo'),(36,'72051985902967','20220213','efectivo');
+/*!40000 ALTER TABLE `afip` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-29 16:03:57
+-- Dump completed on 2022-02-06 22:28:36
