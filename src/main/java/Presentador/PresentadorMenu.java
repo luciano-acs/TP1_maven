@@ -1,6 +1,6 @@
 package Presentador;
 
-import Modelo.BD.BD;
+import Servidor.ServidorBD;
 import Modelo.Organizacion.Empleado;
 import Vista.pFactura;
 import Vista.Sesion;
@@ -39,7 +39,7 @@ public class PresentadorMenu implements ActionListener{
     pDevoluciones devolucion = new pDevoluciones();
     pListarVentas listaVentas = new pListarVentas();
     
-    BD bd = new BD();
+    ServidorBD bd = new ServidorBD();
     nvoCliente nvoCliente = new nvoCliente();
     
     public PresentadorMenu(vistaMenu vista, Sesion sesion, Empleado emp) {
@@ -148,7 +148,6 @@ public class PresentadorMenu implements ActionListener{
             PresentadorProductos pp = new PresentadorProductos(productos);
             pp.cargarCombos();
             pp.productos.jtfNombre.setEnabled(true);
-            pp.productos.btnAgregarProd.setEnabled(true);
         }
         if(e.getSource()==principal.btnVentas){
             principal.jlLogo.setVisible(true);

@@ -11,7 +11,7 @@ import AFIP.FECAEResponse;
 import AFIP.FERecuperaLastCbteResponse;
 import AFIP.Service;
 import AFIP.ServiceSoap;
-import Modelo.BD.BD;
+import Servidor.ServidorBD;
 import Modelo.Cliente.Cliente;
 import Modelo.Organizacion.Afip;
 import Modelo.Producto.*;
@@ -45,7 +45,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
     pVentas ventas = new pVentas();
     pFacturas factura = new pFacturas();
     Venta v = new Venta();
-    BD bd = new BD();
+    ServidorBD bd = new ServidorBD();
     nvoCliente nvoCliente = new nvoCliente();
     pDevoluciones devoluciones = new pDevoluciones();
     pListarVentas listaVentas = new pListarVentas();
@@ -58,8 +58,10 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         this.ventas = vista;
         this.menu = menu;
         
-        ventas.jlSaldo.setVisible(false);
+        ventas.jtfMonto.setText(""+0);
+        ventas.jtfMonto.setEnabled(false);
         ventas.jlSaldo.setText(""+saldo);
+        ventas.jlSaldo.setVisible(false);
         ventas.btnBuscarCliente.addActionListener(this);
         ventas.btnBuscarP.addActionListener(this);
         ventas.btnConfirmar.addActionListener(this);
@@ -70,6 +72,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         ventas.btnRegistarVenta.addActionListener(this);
         ventas.btnFinalizarVenta.addActionListener(this);
         
+        ventas.jlTotal.setText(""+0);
         ventas.cbColor.removeAllItems();
         ventas.cbPago.removeAllItems();
         ventas.cbTalle.removeAllItems();
@@ -79,7 +82,6 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         ventas.jtfCVV.setText("");
         ventas.jtfCantidad.setText("");
         ventas.jtfMarca.setText("");
-        ventas.jtfMonto.setText("");
         ventas.jtfNombre.setText("");
         ventas.jtfRazonSocial.setText("");
         ventas.jtfTarjeta.setText("");
@@ -114,13 +116,14 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         
         devoluciones.btnConsultarVenta.addActionListener(this);
         devoluciones.btnNuevaVenta.addActionListener(this);
-        devoluciones.btnReintegrar.addActionListener(this);
+//        devoluciones.btnReintegrar.addActionListener(this);
         devoluciones.btnReintegroTotal.addActionListener(this);
         
         devoluciones.jtfCUIT.setText("");
-        devoluciones.jtfCantidadR.setText("");
+//        devoluciones.jtfCantidadR.setText("");
         devoluciones.jtfFactura.setText("");
         devoluciones.jtfSaldo.setText("");
+        devoluciones.btnReintegroTotal.setEnabled(true);
 
     }
 
@@ -132,6 +135,8 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         
         listaVentas.jtfCodigo.setText("");
         listaVentas.jtfCuit.setText("");
+        listaVentas.jLabel5.setText("");
+        
         DefaultTableModel datos = (DefaultTableModel) listaVentas.jtVentas.getModel();
         for(int i = 0;i<datos.getRowCount();i++){
             datos.removeRow(i);
@@ -222,8 +227,10 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
             }
         }
         if(e.getSource().equals(ventas.btnRegistarVenta)){
-            if(ventas.jtfNombre.getText().isEmpty()||ventas.jtfRazonSocial.getText().equals("")){
-                JOptionPane.showMessageDialog(null,"Campos sin completar");
+            double montoFinal = Double.parseDouble(ventas.jlTotal.getText())-Double.parseDouble(ventas.jlSaldo.getText());
+            if(ventas.jtfNombre.getText().isEmpty()||ventas.jtfRazonSocial.getText().equals("")||
+                    montoFinal<0){
+                JOptionPane.showMessageDialog(null,"Campos sin completar o monto erroneo");
             }else{
                 ventas.btnCancelarVenta.setEnabled(false);
                 cargarVenta();
@@ -302,6 +309,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
             
             devoluciones.setVisible(false);
             ventas.setVisible(true);
+            
             double saldo = Double.parseDouble(devoluciones.jtfSaldo.getText());
             PresentadorVentas pv = new PresentadorVentas(ventas,menu,saldo);
             cardarId();
@@ -312,32 +320,6 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
             }else{
                 ArrayList<Venta> venta = bd.busquedaVenta(Long.parseLong(devoluciones.jtfCUIT.getText()),"b.numFactura",Integer.parseInt(devoluciones.jtfFactura.getText()));
                 listarLineasDeVenta(venta);
-            }
-        }
-        if(e.getSource().equals(devoluciones.btnReintegrar)){
-            int fila = devoluciones.jtLinea.getSelectedRow();
-            
-            if(fila==-1){
-                JOptionPane.showMessageDialog(null,"Ninguna fila seleccionada");
-            }else{
-                DefaultTableModel datos = (DefaultTableModel) devoluciones.jtLinea.getModel();
-                
-                int codProducto = (int)datos.getValueAt(fila, 0);
-                int linea = (int)datos.getValueAt(fila, 7);
-                int cantidad = Integer.parseInt(devoluciones.jtfCantidadR.getText());
-                bd.actualizarLinea(linea,cantidad);
-                
-                Talle t = new Talle(bd.buscarCodTalle((String)devoluciones.jtLinea.getValueAt(fila, 5)),(String)devoluciones.jtLinea.getValueAt(fila, 5));
-                ColorP co = new ColorP(bd.buscarCodColor((String)devoluciones.jtLinea.getValueAt(fila, 6)),(String)devoluciones.jtLinea.getValueAt(fila, 6));
-                bd.restaurarStockL(""+codProducto, cantidad, t, co);
-                
-                double saldoDebitado = (double)datos.getValueAt(fila, 3)*cantidad;
-                double saldoTotal = Double.parseDouble(devoluciones.jtfSaldo.getText())+saldoDebitado;
-                devoluciones.jtfSaldo.setText(""+saldoTotal);
-                
-                ArrayList<Venta> venta = bd.busquedaVenta(Long.parseLong(devoluciones.jtfCUIT.getText()),"b.numFactura",Integer.parseInt(devoluciones.jtfFactura.getText()));
-                listarLineasDeVenta(venta);
-                devoluciones.jtfCantidadR.setText("");
             }
         }
         if(e.getSource().equals(devoluciones.btnReintegroTotal)){
@@ -353,14 +335,17 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
                     ColorP co = new ColorP(bd.buscarCodColor((String)devoluciones.jtLinea.getValueAt(i, 6)),(String)devoluciones.jtLinea.getValueAt(i, 6));
                     saldoTotal = saldoTotal + (double)devoluciones.jtLinea.getValueAt(i, 4);
                     bd.actualizarLinea((int)datos.getValueAt(i, 7),cant);
-                    bd.restaurarStockL(codigo,cant,t,co);
+                    bd.restaurarStockL(codigo,cant,t,co);                    
                 }
+                bd.actualizarVenta(Integer.parseInt(datos.getValueAt(0,8).toString()));
                     datos.setRowCount(0);
                     for(int i=0;i<datos.getRowCount();i++){
                         datos.removeRow(i);
                     }
-            
+                    
+                    
                     devoluciones.jtfSaldo.setText(""+saldoTotal);
+                    devoluciones.btnReintegroTotal.setEnabled(false);
                     showMessageDialog(null, "Venta Reintegrada");
             }
         }
@@ -544,7 +529,8 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         //condicion tributaria
         if(ve.getCliente().getCondicion().equals("RI")||ve.getCliente().getCondicion().equals("M")){
             condTrib = 1;
-        }else{
+        }
+        if(ve.getCliente().getCondicion().equals("E")||ve.getCliente().getCondicion().equals("CF")||ve.getCliente().getCondicion().equals("NR")){
             condTrib = 6;
         }
         
@@ -560,22 +546,25 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         //afip
         Service servicioA = new Service();
         ServiceSoap loginA = servicioA.getServiceSoap();
-        FERecuperaLastCbteResponse ultimo = loginA.feCompUltimoAutorizado(auth, 25, condTrib);        
         
+        FERecuperaLastCbteResponse ultimo = loginA.feCompUltimoAutorizado(auth, 25, condTrib);        
+                
         FECAECabRequest feCabReq = new FECAECabRequest();
         feCabReq.setPtoVta(25); //constante
         feCabReq.setCbteTipo(condTrib); //variable
-        feCabReq.setCantReg(1); //constante?
+        feCabReq.setCantReg(1); //constante
         
         ArrayOfAlicIva iva = new ArrayOfAlicIva();
         AlicIva aliciva = new AlicIva();
-        aliciva.setId(5); //constante?
+        aliciva.setId(5); //constante
         aliciva.setBaseImp(sneto); //variable
         aliciva.setImporte(sneto*0.21); //variable
         iva.getAlicIva().add(aliciva);
         
         ArrayOfFECAEDetRequest feDetReq = new ArrayOfFECAEDetRequest();
+        
         FECAEDetRequest det = new FECAEDetRequest();
+        
         det.setConcepto(1); //constante
         det.setDocTipo(80); //constante 
         det.setDocNro(Long.parseLong(ve.getCliente().getCuit())); 
@@ -594,8 +583,8 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         feCAEReq.setFeCabReq(feCabReq);
         feCAEReq.setFeDetReq(feDetReq);
                 
-        FECAEResponse solicitar = loginA.fecaeSolicitar(auth, feCAEReq);
-        System.out.println(dtf.format(LocalDateTime.now()));        
+        FECAEResponse solicitar = loginA.fecaeSolicitar(auth, feCAEReq);        
+             
         return solicitar;
     }
 
@@ -653,7 +642,7 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
         
         DefaultTableModel datos = (DefaultTableModel) devoluciones.jtLinea.getModel();
         
-        if(ve.get(0).getLista().size()!=0){
+        if(!ve.get(0).getLista().isEmpty()){
             datos.setNumRows(0);
         
             for(int i = 0;i<ve.get(0).getLista().size();i++){
@@ -664,7 +653,8 @@ public class PresentadorVentas implements ActionListener, java.awt.event.ItemLis
                     ve.get(0).getLista().get(i).getSubtotal(),
                     ve.get(0).getLista().get(i).getTalle().getDescripcion(),
                     ve.get(0).getLista().get(i).getColor().getDescripcion(),
-                    ve.get(0).getLista().get(i).getIdLinea()};            
+                    ve.get(0).getLista().get(i).getIdLinea(),
+                    ve.get(0).getNroComprobante()};            
                 datos.addRow(fila);
             }
         }else{

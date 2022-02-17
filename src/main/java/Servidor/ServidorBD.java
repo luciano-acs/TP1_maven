@@ -1,4 +1,4 @@
-package Modelo.BD;
+package Servidor;
 
 import Modelo.Cliente.Cliente;
 import Modelo.Organizacion.Afip;
@@ -16,28 +16,39 @@ import Modelo.Venta.FormaDePago;
 import Modelo.Venta.LineaDeVenta;
 import Modelo.Venta.Pago;
 import Modelo.Venta.Venta;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /**
  *
  * @author Luciano Acosta
  */
-public class BD {
+public class ServidorBD {
     
     Connection getConnection(){
         Connection c = null;
+        String ip;
         try{
+            try(final DatagramSocket socket = new DatagramSocket()){
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+                ip = socket.getLocalAddress().getHostAddress();
+//                System.out.println(ip);
+            }
             Class.forName("com.mysql.cj.jdbc.Driver");
-            c = DriverManager.getConnection("jdbc:mysql://localhost:3306/tp1","root","2531");
+            c = DriverManager.getConnection("jdbc:mysql://192.168.100.125:3306/tp1","Tienda","");
+//            System.out.println("CONECTADO");
         }
         catch(Exception e){
             System.out.println(e);
+            JOptionPane.showMessageDialog(null,"Conexion con servidor fallida \n"+e);
         }
         return c;
     }
@@ -507,10 +518,11 @@ public class BD {
           ResultSet r = s.executeQuery(sql);
                   
           while(r.next()){
-              cl.setCuit(r.getString("cuit"));
-              cl.setRazonSocial(r.getString("razonSocial"));
-              cl.setDomicilio(r.getString("domicilio"));
-              cl.setCondicion(r.getString("cond_tributaria"));
+              cl.setCuit(r.getString("a.cuit"));
+              cl.setRazonSocial(r.getString("a.razonSocial"));
+              cl.setDomicilio(r.getString("a.domicilio"));
+              cl.setEmail(r.getString("a.email"));
+              cl.setCondicion(r.getString("a.cond_tributaria"));
           }          
         } catch(Exception e){
             e.printStackTrace();
@@ -534,7 +546,20 @@ public class BD {
         }
        return cantidad;
     }
-
+    
+    public void agregarStockN(Stock s) {
+        try{
+            String cadena1 = "insert into stock values (%1,%2)"
+                                .replace("%1",""+s.getId()) 
+                                .replace("%2",""+s.getCantidad());          
+            
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1); 
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     public void agregarStock(int cod, Talle t, ColorP co, int cantidadS) {
         try{
             String cadena1 = "insert into color_has_talle values (%1,%2,%3,%4)"
@@ -687,27 +712,23 @@ public class BD {
             String cadena2 = null;
             Connection c = getConnection();
             
-            if(!existe(""+codigo)){
-                System.out.println("entre");
-                cadena1 = "update stock as a INNER JOIN producto as b set a.cantidad = a.cantidad + %1 where a.idStock = b.Stock_idStock and b.codProducto = %2"
+            cadena1 = "update stock as a INNER JOIN producto as b set a.cantidad = a.cantidad + %1 where a.idStock = b.Stock_idStock and b.codProducto = %2"
                         .replace("%1",""+cantidad)
                         .replace("%2",""+codigo);
-                c.createStatement().executeUpdate(cadena1); 
-            }else{                                     
-                if(existeColorTalle(codigo, co.getIdColor(),t.getIdTalle())){
-                    cadena2 = "update color_has_talle inner join producto, color, talle, stock set color_has_talle.cantidad = color_has_talle.cantidad + %1 where producto.codProducto = stock.idStock and stock.idStock = color_has_talle.Stock_idStock and color_has_talle.Color_idColor = %4 and color_has_talle.Talle_idTalle = %3 and producto.codProducto=%2"
-                              .replace("%1",""+cantidad)
-                              .replace("%2",""+codigo)
-                              .replace("%3",""+t.getIdTalle())
-                              .replace("%4",""+co.getIdColor());
-                }else{
-                    cadena2 = "insert into color_has_talle values(%1,%2,%3,%4)"
-                                .replace("%1",""+co.getIdColor())
-                                .replace("%2",""+t.getIdTalle())
-                                .replace("%3",""+cantidad)
-                                .replace("%4",""+codigo);                        
-                }
-            }                         
+            c.createStatement().executeUpdate(cadena1); 
+            if(existeColorTalle(codigo, co.getIdColor(),t.getIdTalle())){
+                cadena2 = "update color_has_talle inner join producto, color, talle, stock set color_has_talle.cantidad = color_has_talle.cantidad + %1 where producto.codProducto = stock.idStock and stock.idStock = color_has_talle.Stock_idStock and color_has_talle.Color_idColor = %4 and color_has_talle.Talle_idTalle = %3 and producto.codProducto=%2"
+                           .replace("%1",""+cantidad)
+                           .replace("%2",""+codigo)
+                           .replace("%3",""+t.getIdTalle())
+                           .replace("%4",""+co.getIdColor());
+            }else{
+                cadena2 = "insert into color_has_talle values(%1,%2,%3,%4)"
+                           .replace("%1",""+co.getIdColor())
+                           .replace("%2",""+t.getIdTalle())
+                           .replace("%3",""+cantidad)
+                           .replace("%4",""+codigo);                        
+            }                                    
               
             c.createStatement().executeUpdate(cadena2);                       
         }
@@ -785,7 +806,6 @@ public class BD {
     public Empleado existeEmpleado(String user, String contraseña) {
         Empleado emp = new Empleado();
         try {
-            System.out.println("entre bd");
           Connection c = getConnection();
           Statement s = c.createStatement();
           String sql = "select count(legajo), apellido, nombre, email, rol from empleado where legajo=%1 and contraseña='%2'"
@@ -1255,6 +1275,19 @@ public class BD {
             String cadena1 = "update lineadeventa set cantidad = cantidad - %1 where idLinea = %2"
                                 .replace("%1",""+cantidad) 
                                 .replace("%2",""+linea);          
+            
+            Connection c = getConnection();
+            c.createStatement().executeUpdate(cadena1); 
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarVenta(int idVenta) {
+        try{
+            String cadena1 = "update venta set total = 0 where idVenta = %1"
+                                .replace("%1",""+idVenta);          
             
             Connection c = getConnection();
             c.createStatement().executeUpdate(cadena1); 

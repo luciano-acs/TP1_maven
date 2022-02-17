@@ -4,7 +4,7 @@
  */
 package Presentador;
 
-import Modelo.BD.BD;
+import Servidor.ServidorBD;
 import Modelo.Organizacion.Empleado;
 import Vista.Sesion;
 import Vista.vistaMenu;
@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 public class PresentadorInicio implements ActionListener{
 
     Sesion iniciar = new Sesion();
-    BD bd = new BD();
+    ServidorBD bd = new ServidorBD();
     
     public PresentadorInicio(Sesion inicio) {
         this.iniciar = inicio;

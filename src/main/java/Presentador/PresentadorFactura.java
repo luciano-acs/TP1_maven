@@ -40,11 +40,12 @@ public class PresentadorFactura implements ActionListener, Printable{
         factura.btnImprimir.addActionListener(this);
         factura.btnSalir.addActionListener(this);
         
-        if(respuesta.getFeDetResp().getFECAEDetResponse().get(0).getDocTipo()==1){
+        if(ve.getCliente().getCondicion().equals("RI")||ve.getCliente().getCondicion().equals("M")){
             tipoFact = "A";
         }else{
             tipoFact = "B";
         }
+        
         for(int i=0; i<ve.getLista().size();i++){
             double costo = ve.getLista().get(i).getProducto().getCosto();
             double margen = ve.getLista().get(i).getProducto().getCosto()*ve.getLista().get(i).getProducto().getMargenGanancia();
@@ -97,7 +98,7 @@ public class PresentadorFactura implements ActionListener, Printable{
         factura.btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/cerrar-sesion.png")));
         
         double sneto = 0;
-        String tipoFact = "";
+        String tipoFact;
         this.factura = factura;
         factura.btnImprimir.addActionListener(this);
         factura.btnSalir.addActionListener(this);
@@ -108,6 +109,7 @@ public class PresentadorFactura implements ActionListener, Printable{
             tipoFact = "B";
         }
         
+        
         for(int i=0; i<ve.get(0).getLista().size();i++){
             double costo = ve.get(0).getLista().get(i).getProducto().getCosto();
             double margen = ve.get(0).getLista().get(i).getProducto().getCosto()*ve.get(0).getLista().get(i).getProducto().getMargenGanancia();
@@ -115,6 +117,7 @@ public class PresentadorFactura implements ActionListener, Printable{
             double neto = (costo+margen)*cantidad;
             sneto = sneto+neto;
         }
+        
         
         factura.jlEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/percha (3).png")));
         factura.jlTipo.setText(tipoFact); //if

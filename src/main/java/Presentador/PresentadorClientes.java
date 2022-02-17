@@ -1,6 +1,6 @@
 package Presentador;
 
-import Modelo.BD.BD;
+import Servidor.ServidorBD;
 import Modelo.Cliente.Cliente;
 import Modelo.Cliente.CondTributaria;
 import Modelo.Producto.Producto;
@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 public class PresentadorClientes implements ActionListener{
     pClientes clientes = new pClientes();
     nvoCliente nvoCliente = new nvoCliente();
-    BD bd = new BD();
+    ServidorBD bd = new ServidorBD();
     
     public PresentadorClientes(pClientes cl){
         this.clientes = cl;

@@ -12,7 +12,6 @@ D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxw
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxws-wsimport\AFIP\FECAECabResponse.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\src\main\java\Vista\pProductos.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxws-wsimport\AFIP\FEParamGetTiposIvaResponse.java
-D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\src\main\java\Modelo\BD\BD.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\src\main\java\Modelo\Venta\Pago.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxws-wsimport\AFIP\FEDummy.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxws-wsimport\AFIP\FEParamGetTiposPaises.java
@@ -62,6 +61,7 @@ D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxw
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxws-wsimport\AFIP\OpcionalTipoResponse.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxws-wsimport\AFIP\FECAEACabRequest.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxws-wsimport\AFIP\Moneda.java
+D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\src\main\java\Servidor\ServidorBD.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\src\main\java\Modelo\Venta\Venta.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxws-wsimport\AFIP\ArrayOfFECAEADetResponse.java
 D:\DOCUMENTOS\ISI2018\2021\SOFTWARE\TP_1\TP1_maven\target\generated-sources\jaxws-wsimport\AFIP\ArrayOfDocTipo.java

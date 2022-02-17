@@ -37,11 +37,8 @@ public class pDevoluciones extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jtLinea = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jtfCantidadR = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jtfSaldo = new javax.swing.JTextField();
-        btnReintegrar = new javax.swing.JButton();
         btnReintegroTotal = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(12, 72, 56));
@@ -95,7 +92,7 @@ public class pDevoluciones extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Producto", "Descripción", "Cantidad", "Precio Unitario", "Subtotal", "Talle", "Color", "lineal"
+                "Producto", "Descripción", "Cantidad", "Precio Unitario", "Subtotal", "Talle", "Color", "lineal", "idVenta"
             }
         ));
         jScrollPane1.setViewportView(jtLinea);
@@ -109,23 +106,16 @@ public class pDevoluciones extends javax.swing.JPanel {
             jtLinea.getColumnModel().getColumn(7).setMinWidth(0);
             jtLinea.getColumnModel().getColumn(7).setPreferredWidth(0);
             jtLinea.getColumnModel().getColumn(7).setMaxWidth(0);
+            jtLinea.getColumnModel().getColumn(8).setMinWidth(0);
+            jtLinea.getColumnModel().getColumn(8).setPreferredWidth(0);
+            jtLinea.getColumnModel().getColumn(8).setMaxWidth(0);
         }
 
         jLabel4.setText("Seleccione producto a devolver:");
 
-        jLabel5.setText("Ingrese la cantidad a reintegrar:");
-
         jLabel6.setText("Saldo a favor:");
 
         jtfSaldo.setToolTipText("");
-
-        btnReintegrar.setBackground(new java.awt.Color(31, 192, 132));
-        btnReintegrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/garrapata (1).png"))); // NOI18N
-        btnReintegrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReintegrarActionPerformed(evt);
-            }
-        });
 
         btnReintegroTotal.setBackground(new java.awt.Color(31, 192, 132));
         btnReintegroTotal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/garrapata (1).png"))); // NOI18N
@@ -164,13 +154,7 @@ public class pDevoluciones extends javax.swing.JPanel {
                                 .addComponent(btnConsultarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel4)
                             .addComponent(jLabel6)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jtfSaldo, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jtfCantidadR, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnReintegrar, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jtfSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -191,13 +175,7 @@ public class pDevoluciones extends javax.swing.JPanel {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfCantidadR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnReintegrar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(87, 87, 87)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jtfSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -217,10 +195,6 @@ public class pDevoluciones extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnNuevaVentaActionPerformed
 
-    private void btnReintegrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReintegrarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnReintegrarActionPerformed
-
     private void btnReintegroTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReintegroTotalActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnReintegroTotalActionPerformed
@@ -229,19 +203,16 @@ public class pDevoluciones extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnConsultarVenta;
     public javax.swing.JButton btnNuevaVenta;
-    public javax.swing.JButton btnReintegrar;
     public javax.swing.JButton btnReintegroTotal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JTable jtLinea;
     public javax.swing.JTextField jtfCUIT;
-    public javax.swing.JTextField jtfCantidadR;
     public javax.swing.JTextField jtfFactura;
     public javax.swing.JTextField jtfSaldo;
     // End of variables declaration//GEN-END:variables

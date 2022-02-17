@@ -48,7 +48,10 @@ public class Principal{
         Sesion inicio = new Sesion();
         PresentadorInicio iniciar = new PresentadorInicio(inicio);
         
-       
+//       LoginService servicio = new LoginService();
+//       ILoginService login = servicio.getSGEAuthService();
+//       Autorizacion autorizacion = login.solicitarAutorizacion("036F676C-6D35-4CEE-B315-DA9D55C43A10"); 
+//        System.out.println(autorizacion.getCuit());
 //        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
 //        System.out.println(dtf.format(LocalDateTime.now()));
 //        PresentadorVentas pv = new PresentadorVentas();

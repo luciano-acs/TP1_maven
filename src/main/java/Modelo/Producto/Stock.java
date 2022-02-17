@@ -1,5 +1,5 @@
 package Modelo.Producto;
-import Modelo.BD.BD;
+import Servidor.ServidorBD;
 import java.util.ArrayList;
 import Modelo.Venta.LineaDeVenta;
 
@@ -73,7 +73,7 @@ public class Stock {
 
     public void actualizarStock(int codigo, int vendido) {
         
-        BD bd = new BD();
+        ServidorBD bd = new ServidorBD();
                
 //        for(int i=0; i<bd.getStocks().size();i++){ 
 //            if(bd.getStocks().get(i).getProducto().getCodigo() == codigo){
