@@ -1,6 +1,6 @@
 package Modelo.Venta;
 import Modelo.Producto.Producto;
-import Modelo.Cliente.Cliente;
+import Modelo.ClienteT.Cliente;
 import Modelo.Organizacion.Empleado;
 
 import java.util.ArrayList;

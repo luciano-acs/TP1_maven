@@ -1,4 +1,4 @@
-package Modelo.Cliente;
+package Modelo.ClienteT;
 
 public class Cliente {
 

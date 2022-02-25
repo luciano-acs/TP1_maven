@@ -1,6 +1,6 @@
 package Servidor;
 
-import Modelo.Cliente.Cliente;
+import Modelo.ClienteT.Cliente;
 import Modelo.Organizacion.Afip;
 import Modelo.Organizacion.Empleado;
 import Modelo.Producto.Auxiliar;

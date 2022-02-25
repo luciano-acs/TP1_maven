@@ -1,8 +1,8 @@
 package Presentador;
 
 import Servidor.ServidorBD;
-import Modelo.Cliente.Cliente;
-import Modelo.Cliente.CondTributaria;
+import Modelo.ClienteT.Cliente;
+import Modelo.ClienteT.CondTributaria;
 import Modelo.Producto.Producto;
 import Vista.nvoCliente;
 import Vista.pClientes;

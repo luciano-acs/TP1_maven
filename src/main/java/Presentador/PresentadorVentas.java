@@ -12,7 +12,7 @@ import AFIP.FERecuperaLastCbteResponse;
 import AFIP.Service;
 import AFIP.ServiceSoap;
 import Servidor.ServidorBD;
-import Modelo.Cliente.Cliente;
+import Modelo.ClienteT.Cliente;
 import Modelo.Organizacion.Afip;
 import Modelo.Producto.*;
 import Modelo.Venta.*;
